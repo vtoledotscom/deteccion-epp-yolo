@@ -1,0 +1,88 @@
+# =========================
+# Laravel / PHP
+# =========================
+/vendor
+/storage/*.key
+/storage/logs/*
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/testing/*
+/storage/framework/views/*
+/storage/pail
+/bootstrap/cache/*
+
+# PHPUnit / testing
+/.phpunit.cache
+.phpunit.result.cache
+
+# =========================
+# Node / Frontend
+# =========================
+/node_modules
+/public/build
+/public/hot
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# =========================
+# Environment / Secrets
+# =========================
+.env
+.env.*
+!.env.example
+/auth.json
+
+# =========================
+# Local storage / symlinks
+# =========================
+/public/storage
+
+# =========================
+# Base de datos / exports
+# =========================
+*.sqlite
+*.sql
+*.csv
+*.pdf
+*.zip
+
+# =========================
+# Evidencias (MUY IMPORTANTE)
+# =========================
+/evidence
+/public/evidence
+/storage/app/evidence
+/storage/app/public/evidence
+
+# =========================
+# IDE / Editors
+# =========================
+/.vscode/*
+!/.vscode/extensions.json
+/.idea
+/.fleet
+/.zed
+/.nova
+.phpactor.json
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Laravel local dev
+# =========================
+Homestead.json
+Homestead.yaml
+
+# =========================
+# Misc
+# =========================
+*.bak
+*.tmp
+*.swp
+
+.github/workflows/*.yml
