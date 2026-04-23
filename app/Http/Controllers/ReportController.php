@@ -84,8 +84,6 @@ class ReportController extends Controller
                 'Tipo Evento',
                 'Estado',
                 'Violaciones',
-                'Persona ID',
-                'Frame',
             ], ';');
 
             foreach ($events as $event) {
@@ -97,8 +95,6 @@ class ReportController extends Controller
                     $event->event_type,
                     $event->status,
                     implode(', ', $event->violation_codes_json ?? []),
-                    $event->person_track_id,
-                    $event->frame_number,
                 ], ';');
             }
 

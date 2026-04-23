@@ -31,8 +31,8 @@ class EventExportController extends Controller
                 'Tipo Evento',
                 'Estado',
                 'Violaciones',
-                'Persona ID',
-                'Frame',
+                #'Persona ID',
+                #'Frame',
             ], ';');
 
             foreach ($events as $event) {
@@ -44,8 +44,8 @@ class EventExportController extends Controller
                     $event->event_type,
                     $event->status,
                     implode(', ', $event->violation_codes_json ?? []),
-                    $event->person_track_id,
-                    $event->frame_number,
+                    #$event->person_track_id,
+                    #$event->frame_number,
                 ], ';');
             }
 

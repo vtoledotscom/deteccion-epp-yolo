@@ -136,8 +136,6 @@
                 <th>Tipo Evento</th>
                 <th>Estado</th>
                 <th>Violaciones</th>
-                <th>Persona ID</th>
-                <th>Frame</th>
             </tr>
         </thead>
         <tbody>
@@ -150,8 +148,6 @@
                     <td>{{ eventsPdfEventTypeLabel($event->event_type) }}</td>
                     <td>{{ eventsPdfStatusLabel($event->status) }}</td>
                     <td>{{ eventsPdfViolationLabels($event->violation_codes_json ?? [], $event->event_type) }}</td>
-                    <td>{{ $event->person_track_id }}</td>
-                    <td>{{ $event->frame_number }}</td>
                 </tr>
             @empty
                 <tr>
