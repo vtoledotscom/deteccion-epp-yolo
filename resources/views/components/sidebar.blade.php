@@ -23,11 +23,11 @@
             <span>Eventos</span>
         </a>
 
-        <a href="{{ route('events.open') }}"
+        {{-- <a href="{{ route('events.open') }}"
            class="sidebar-link {{ $currentRoute === 'events.open' ? 'active' : '' }}">
             <span>Eventos abiertos</span>
             <span class="sidebar-badge">32</span>
-        </a>
+        </a> --}}
 
         <a href="{{ route('reports.index') }}"
            class="sidebar-link {{ $currentRoute === 'reports.index' ? 'active' : '' }}">
