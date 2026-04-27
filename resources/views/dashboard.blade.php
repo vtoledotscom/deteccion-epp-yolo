@@ -72,30 +72,30 @@
     <div class="kpi-card">
         <div class="kpi-icon blue"></div>
         <div class="kpi-value">{{ number_format($totalEvents, 0, ',', '.') }}</div>
-        <div class="kpi-label">Total Eventos</div>
-        <div class="kpi-variation neutral">Rango seleccionado</div>
+        <div class="kpi-label">Total eventos registrados</div>
+        {{-- <div class="kpi-variation neutral">Rango seleccionado</div> --}}
     </div>
 
-    <div class="kpi-card">
+    {{-- <div class="kpi-card">
         <div class="kpi-icon red"></div>
         <div class="kpi-value">{{ number_format($startedViolations, 0, ',', '.') }}</div>
         <div class="kpi-label">Infracciones Iniciadas</div>
         <div class="kpi-variation neutral">event_type = violation_started</div>
-    </div>
+    </div> --}}
 
-    <div class="kpi-card">
+    {{-- <div class="kpi-card">
         <div class="kpi-icon green"></div>
         <div class="kpi-value">{{ number_format($resolvedViolations, 0, ',', '.') }}</div>
         <div class="kpi-label">Infracciones Resueltas</div>
         <div class="kpi-variation neutral">event_type = violation_resolved</div>
-    </div>
+    </div> --}}
 
-    <div class="kpi-card">
+    {{-- <div class="kpi-card">
         <div class="kpi-icon orange"></div>
         <div class="kpi-value">{{ number_format($openViolations, 0, ',', '.') }}</div>
         <div class="kpi-label">Eventos Abiertos</div>
         <div class="kpi-variation neutral">Sin resolver</div>
-    </div>
+    </div> --}}
 </div>
 
 <div class="card">
