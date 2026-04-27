@@ -164,11 +164,12 @@
                     src="{{ route('media.events.annotated', $event->event_id) }}"
                     alt="Imagen anotada del evento"
                     class="evidence-image"
+                    onerror="this.outerHTML='<div class=\'evidence-placeholder\'>Imagen no disponible</div>'"
                 >
             </div>
         @else
             <div class="evidence-placeholder">
-                Imagen anotada no disponible
+                Imagen no disponible
             </div>
         @endif
 
