@@ -121,7 +121,7 @@
 
 <div class="event-header">
     <div>
-        <h2 title="{{ $event->event_id }}">{{ \Illuminate\Support\Str::limit($event->event_id, 60) }}</h2>
+        <h2 title="{{ $event->display_id }}">{{ \Illuminate\Support\Str::limit($event->display_id, 60) }}</h2>
         <p>Detectado el {{ optional($event->event_confirmed_at)->format('d-m-Y H:i:s') }}</p>
     </div>
 

@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\EppEvent;
+use App\Models\Observers\EppEventObserver;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -24,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+        $this->observeModels();
     }
 
     /**
@@ -46,5 +49,13 @@ class AppServiceProvider extends ServiceProvider
                 ->uncompromised()
             : null,
         );
+    }
+
+    /**
+     * Registra los observers para los modelos.
+     */
+    protected function observeModels(): void
+    {
+        EppEvent::observe(EppEventObserver::class);
     }
 }

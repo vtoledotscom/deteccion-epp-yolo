@@ -150,9 +150,9 @@
                 <tbody>
                     @forelse($events as $event)
                         <tr>
-                            <td title="{{ $event->event_id }}">
+                            <td title="{{ $event->display_id }}">
                                 <a href="{{ route('events.show', $event->event_id) }}" class="link-primary">
-                                    {{ Str::limit($event->event_id, 30) }}
+                                    {{ Str::limit($event->display_id, 30) }}
                                 </a>
                             </td>
 

@@ -37,7 +37,7 @@ class EventExportController extends Controller
 
             foreach ($events as $event) {
                 fputcsv($handle, [
-                    $event->event_id,
+                    $event->display_id,
                     optional($event->event_confirmed_at)->format('d-m-Y H:i:s'),
                     $event->camera_id,
                     $event->scenario_id,

@@ -105,23 +105,23 @@
         <div class="kpi-label">Total Eventos</div>
     </div>
 
-    {{-- <div class="kpi-card">
+    <div class="kpi-card">
         <div class="kpi-icon red"></div>
         <div class="kpi-value">{{ number_format($summary['started_violations'], 0, ',', '.') }}</div>
         <div class="kpi-label">Infracciones Iniciadas</div>
-    </div> --}}
+    </div>
 
-    {{-- <div class="kpi-card">
+    <div class="kpi-card">
         <div class="kpi-icon green"></div>
         <div class="kpi-value">{{ number_format($summary['resolved_violations'], 0, ',', '.') }}</div>
         <div class="kpi-label">Infracciones Resueltas</div>
-    </div> --}}
+    </div>
 
-    {{-- <div class="kpi-card">
+    <div class="kpi-card">
         <div class="kpi-icon orange"></div>
         <div class="kpi-value">{{ number_format($summary['open_violations'], 0, ',', '.') }}</div>
         <div class="kpi-label">Eventos Abiertos</div>
-    </div> --}}
+    </div>
 </div>
 
 <div class="report-summary-grid">
@@ -218,9 +218,9 @@
             <tbody>
                 @forelse($events as $event)
                     <tr>
-                        <td title="{{ $event->event_id }}">
+                        <td title="{{ $event->display_id }}">
                             <a href="{{ route('events.show', $event->event_id) }}" class="link-primary">
-                                {{ \Illuminate\Support\Str::limit($event->event_id, 30) }}
+                                {{ \Illuminate\Support\Str::limit($event->display_id, 30) }}
                             </a>
                         </td>
                         <td>{{ optional($event->event_confirmed_at)->format('d-m-Y H:i:s') }}</td>

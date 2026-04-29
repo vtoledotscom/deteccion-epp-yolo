@@ -12,7 +12,10 @@ class EppEvent extends Model
 
     public $timestamps = false;
 
+    protected $appends = ['display_id'];
+
     protected $casts = [
+        'sequence_id' => 'integer',
         'event_observed_at' => 'datetime',
         'event_confirmed_at' => 'datetime',
         'resolved_at' => 'datetime',
@@ -29,5 +32,13 @@ class EppEvent extends Model
     public function evidence()
     {
         return $this->hasOne(EppEventEvidence::class, 'event_id', 'event_id');
+    }
+
+    /**
+     * Obtiene el ID con formato correlativo para mostrar
+     */
+    public function getDisplayIdAttribute(): string
+    {
+        return 'EVT-' . str_pad((string)$this->sequence_id, 6, '0', STR_PAD_LEFT);
     }
 }

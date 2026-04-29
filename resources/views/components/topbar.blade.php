@@ -1,6 +1,6 @@
 <div class="topbar-wrapper">
     <div>
-        <h1 class="topbar-title">Detección de EPP</h1>
+        <h1 class="topbar-title">EPPA detecctor</h1>
         <p class="topbar-subtitle">Panel de Monitoreo Operacional</p>
     </div>
 
@@ -8,7 +8,7 @@
         <nav class="topbar-menu">
             <a href="{{ route('dashboard') }}">Dashboard</a>
             <a href="{{ route('events.index') }}">Eventos</a>
-            {{-- <a href="{{ route('events.open') }}">Eventos abiertos</a> --}}
+            <a href="{{ route('events.open') }}">Eventos abiertos</a>
             <a href="{{ route('reports.index') }}">Reportes</a>
         </nav>
 
