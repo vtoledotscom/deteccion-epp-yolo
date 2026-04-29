@@ -192,15 +192,16 @@
     <div class="card-header">
         <h3>Listado Detallado</h3>
 
-        <div class="toolbar-right">
-            <a href="{{ route('reports.export.csv', request()->query()) }}" class="btn btn-secondary">
-                Exportar CSV
-            </a>
-
-            <a href="{{ route('reports.export.pdf', request()->query()) }}" class="btn btn-primary">
-                Exportar PDF
-            </a>
-        </div>
+        @if(auth()->user()?->isAdmin())
+            <div class="toolbar-right">
+                <a href="{{ route('reports.export.csv', request()->query()) }}" class="btn btn-secondary">
+                    Exportar CSV
+                </a>
+                <a href="{{ route('reports.export.pdf', request()->query()) }}" class="btn btn-primary">
+                    Exportar PDF
+                </a>
+            </div>
+        @endif
     </div>
 
     <div class="table-wrapper">

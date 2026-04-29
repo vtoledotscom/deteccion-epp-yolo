@@ -73,38 +73,40 @@
             Mostrando {{ $events->count() }} de {{ $events->total() }} eventos
         </div>
 
-        <div class="toolbar-right">
-            <input type="text"
-                wire:model.live.debounce.500ms="search"
-                placeholder="Buscar por ID..."
-                class="form-control search-input">
+        @if(auth()->user()?->isAdmin())
+            <div class="toolbar-right">
+                <input type="text"
+                    wire:model.live.debounce.500ms="search"
+                    placeholder="Buscar por ID..."
+                    class="form-control search-input">
 
-            <a href="{{ route('events.export.csv', [
-                'date_from' => $dateFrom,
-                'date_to' => $dateTo,
-                'camera' => $camera,
-                'scenario' => $scenario,
-                'event_type' => $eventType,
-                'status' => $status,
-                'search' => $search,
-            ]) }}"
-            class="btn btn-secondary">
-                Exportar CSV
-            </a>
+                <a href="{{ route('events.export.csv', [
+                    'date_from' => $dateFrom,
+                    'date_to' => $dateTo,
+                    'camera' => $camera,
+                    'scenario' => $scenario,
+                    'event_type' => $eventType,
+                    'status' => $status,
+                    'search' => $search,
+                ]) }}"
+                class="btn btn-secondary">
+                    Exportar CSV
+                </a>
 
-            <a href="{{ route('events.export.pdf', [
-                'date_from' => $dateFrom,
-                'date_to' => $dateTo,
-                'camera' => $camera,
-                'scenario' => $scenario,
-                'event_type' => $eventType,
-                'status' => $status,
-                'search' => $search,
-            ]) }}"
-            class="btn btn-primary">
-                Exportar PDF
-            </a>
-        </div>
+                <a href="{{ route('events.export.pdf', [
+                    'date_from' => $dateFrom,
+                    'date_to' => $dateTo,
+                    'camera' => $camera,
+                    'scenario' => $scenario,
+                    'event_type' => $eventType,
+                    'status' => $status,
+                    'search' => $search,
+                ]) }}"
+                class="btn btn-primary">
+                    Exportar PDF
+                </a>
+            </div>
+        @endif
     </div>
 
     <div class="card">

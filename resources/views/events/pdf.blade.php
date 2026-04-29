@@ -141,7 +141,7 @@
         <tbody>
             @forelse($events as $event)
                 <tr>
-                    <td>{{ $event->event_id }}</td>
+                    <td>{{ $event->display_id }}</td>
                     <td>{{ optional($event->event_confirmed_at)->format('d-m-Y H:i:s') }}</td>
                     <td>{{ eventsPdfCameraLabel($event->camera_id) }}</td>
                     <td>{{ eventsPdfScenarioLabel($event->scenario_id) }}</td>

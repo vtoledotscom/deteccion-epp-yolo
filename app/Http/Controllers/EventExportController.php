@@ -31,8 +31,6 @@ class EventExportController extends Controller
                 'Tipo Evento',
                 'Estado',
                 'Violaciones',
-                #'Persona ID',
-                #'Frame',
             ], ';');
 
             foreach ($events as $event) {
@@ -44,8 +42,6 @@ class EventExportController extends Controller
                     $event->event_type,
                     $event->status,
                     implode(', ', $event->violation_codes_json ?? []),
-                    #$event->person_track_id,
-                    #$event->frame_number,
                 ], ';');
             }
 
@@ -57,8 +53,12 @@ class EventExportController extends Controller
 
     public function pdf(Request $request)
     {
+        ini_set('memory_limit', '512M');
+        set_time_limit(120);
+
         $events = $this->buildFilteredQuery($request)
             ->orderByDesc('event_confirmed_at')
+            ->limit(300)
             ->get();
 
         $dateFrom = $request->input('date_from')
@@ -86,6 +86,7 @@ class EventExportController extends Controller
 
         return $pdf->download('eventos_' . now()->format('Ymd_His') . '.pdf');
     }
+
 
     protected function buildFilteredQuery(Request $request)
     {

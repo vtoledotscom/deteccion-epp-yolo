@@ -1,6 +1,6 @@
 <div class="topbar-wrapper">
     <div>
-        <h1 class="topbar-title">EPPA detecctor</h1>
+        <h1 class="topbar-title">EPPA detección</h1>
         <p class="topbar-subtitle">Panel de Monitoreo Operacional</p>
     </div>
 
@@ -12,7 +12,22 @@
             <a href="{{ route('reports.index') }}">Reportes</a>
         </nav>
 
-        <button class="icon-button" disabled type="button">🔔</button>
-        <div class="avatar small" disabled >JS</div>
+        <div class="topbar-user-box">
+            <div class="avatar small">
+                {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 2)) }}
+            </div>
+
+            <div class="topbar-user-info">
+                <strong>{{ auth()->user()->name ?? 'Usuario' }}</strong>
+                <small>{{ auth()->user()->email ?? '' }}</small>
+            </div>
+        </div>
+
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit" class="btn btn-secondary">
+                Salir
+            </button>
+        </form>
     </div>
 </div>

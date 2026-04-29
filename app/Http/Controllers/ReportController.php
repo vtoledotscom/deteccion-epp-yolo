@@ -106,12 +106,16 @@ class ReportController extends Controller
 
     public function exportPdf(Request $request)
     {
+        ini_set('memory_limit', '512M');
+        set_time_limit(120);
+
         [$dateFrom, $dateTo] = $this->resolveDates($request);
 
         $query = $this->buildBaseQuery($request, $dateFrom, $dateTo);
 
         $events = (clone $query)
             ->orderByDesc('event_confirmed_at')
+            ->limit(300)
             ->get();
 
         $summary = [
@@ -129,11 +133,15 @@ class ReportController extends Controller
             'dateTo' => $dateTo,
             'events' => $events,
             'summary' => $summary,
+            'filters' => [
+                'camera' => $request->input('camera', 'all'),
+                'scenario' => $request->input('scenario', 'all'),
+                'event_type' => $request->input('event_type', 'all'),
+            ],
         ])->setPaper('a4', 'landscape');
 
         return $pdf->download('reporte_eventos_' . now()->format('Ymd_His') . '.pdf');
     }
-
     protected function resolveDates(Request $request): array
     {
         $dateFrom = $request->input('date_from')

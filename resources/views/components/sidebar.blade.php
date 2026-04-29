@@ -4,10 +4,7 @@
 
 <div class="sidebar-wrapper">
     <div class="sidebar-logo">
-        <div class="logo-mark">m</div>
-        <div class="logo-text">
-            <strong>TSCOM</strong>
-        </div>
+        <div class="logo-mark"><img src="{{ asset('images/logo-tscom.svg') }}" alt="logo-tscom" /></div>
     </div>
 
     <div class="sidebar-section-title">MENÚ PRINCIPAL</div>
