@@ -90,7 +90,7 @@
     <div class="kpi-card">
         <div class="kpi-icon orange"></div>
         <div class="kpi-value">{{ number_format($openViolations, 0, ',', '.') }}</div>
-        <div class="kpi-label">Eventos Abiertos</div>
+        <div class="kpi-label">Eventos abiertos actuales</div>
     </div>
 </div>
 

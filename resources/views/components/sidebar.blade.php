@@ -1,5 +1,17 @@
 @php
+    use App\Models\EppEvent;
+
     $currentRoute = request()->route()?->getName();
+    $user = auth()->user();
+    $openEventsCount = EppEvent::query()
+        ->where('event_type', 'violation_started')
+        ->whereNull('resolved_by_event_id')
+        ->count();
+    $roleLabel = match ($user?->role) {
+        'admin' => 'Administrador',
+        'viewer' => 'Visualizador',
+        default => 'Usuario',
+    };
 @endphp
 
 <div class="sidebar-wrapper">
@@ -23,7 +35,7 @@
         <a href="{{ route('events.open') }}"
            class="sidebar-link {{ $currentRoute === 'events.open' ? 'active' : '' }}">
             <span>Eventos abiertos</span>
-            <span class="sidebar-badge">32</span>
+            <span class="sidebar-badge">{{ number_format($openEventsCount, 0, ',', '.') }}</span>
         </a>
 
         <a href="{{ route('reports.index') }}"
@@ -34,10 +46,10 @@
 
     <div class="sidebar-footer">
         <div class="sidebar-user">
-            <div class="avatar">JS</div>
+            <div class="avatar">{{ $user?->initials() ?? 'U' }}</div>
             <div>
-                <div class="user-name">Juan Salgado</div>
-                <div class="user-role">Supervisor Operacional</div>
+                <div class="user-name">{{ $user?->name ?? 'Usuario' }}</div>
+                <div class="user-role">{{ $roleLabel }}</div>
             </div>
         </div>
 
