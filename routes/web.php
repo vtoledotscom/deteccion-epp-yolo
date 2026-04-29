@@ -38,6 +38,9 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/reports/export/pdf', [ReportController::class, 'exportPdf'])
             ->name('reports.export.pdf');
+            
+        Route::get('/events/{eventId}/pdf', [EventExportController::class, 'eventPdf'])
+            ->name('events.export.event-pdf');
     });
 
     /*

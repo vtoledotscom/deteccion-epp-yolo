@@ -87,6 +87,22 @@ class EventExportController extends Controller
         return $pdf->download('eventos_' . now()->format('Ymd_His') . '.pdf');
     }
 
+    public function eventPdf(string $eventId)
+    {
+        ini_set('memory_limit', '512M');
+        set_time_limit(120);
+
+        $event = EppEvent::query()
+            ->with('evidence')
+            ->where('event_id', $eventId)
+            ->firstOrFail();
+
+        $pdf = Pdf::loadView('events.event-pdf', [
+            'event' => $event,
+        ])->setPaper('a4', 'portrait');
+
+        return $pdf->download('evento_' . $event->display_id . '.pdf');
+    }
 
     protected function buildFilteredQuery(Request $request)
     {
