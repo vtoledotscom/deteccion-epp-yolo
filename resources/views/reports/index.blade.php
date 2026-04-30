@@ -192,14 +192,19 @@
     <div class="card-header">
         <h3>Listado Detallado</h3>
 
-        @if(auth()->user()?->isAdmin())
+        @if(auth()->user()?->hasPermission('export_csv') || auth()->user()?->hasPermission('export_pdf'))
             <div class="toolbar-right">
-                <a href="{{ route('reports.export.csv', request()->query()) }}" class="btn btn-secondary">
-                    Exportar CSV
-                </a>
-                <a href="{{ route('reports.export.pdf', request()->query()) }}" class="btn btn-primary">
-                    Exportar PDF
-                </a>
+                @if(auth()->user()?->hasPermission('export_csv'))
+                    <a href="{{ route('reports.export.csv', request()->query()) }}" class="btn btn-secondary">
+                        Exportar CSV
+                    </a>
+                @endif
+
+                @if(auth()->user()?->hasPermission('export_pdf'))
+                    <a href="{{ route('reports.export.pdf', request()->query()) }}" class="btn btn-primary">
+                        Exportar PDF
+                    </a>
+                @endif
             </div>
         @endif
     </div>

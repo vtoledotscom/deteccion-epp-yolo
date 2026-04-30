@@ -9,6 +9,8 @@
         ->count();
     $roleLabel = match ($user?->role) {
         'admin' => 'Administrador',
+        'supervisor' => 'Supervisor',
+        'operator' => 'Operador',
         'viewer' => 'Visualizador',
         default => 'Usuario',
     };
@@ -22,26 +24,34 @@
     <div class="sidebar-section-title">MENÚ PRINCIPAL</div>
 
     <nav class="sidebar-nav">
-        <a href="{{ route('dashboard') }}"
-           class="sidebar-link {{ $currentRoute === 'dashboard' ? 'active' : '' }}">
-            <span>Dashboard</span>
-        </a>
+        @if($user?->hasPermission('view_dashboard'))
+            <a href="{{ route('dashboard') }}"
+               class="sidebar-link {{ $currentRoute === 'dashboard' ? 'active' : '' }}">
+                <span>Dashboard</span>
+            </a>
+        @endif
 
-        <a href="{{ route('events.index') }}"
-           class="sidebar-link {{ $currentRoute === 'events.index' ? 'active' : '' }}">
-            <span>Eventos</span>
-        </a>
+        @if($user?->hasPermission('view_events'))
+            <a href="{{ route('events.index') }}"
+               class="sidebar-link {{ $currentRoute === 'events.index' ? 'active' : '' }}">
+                <span>Eventos</span>
+            </a>
+        @endif
 
-        <a href="{{ route('events.open') }}"
-           class="sidebar-link {{ $currentRoute === 'events.open' ? 'active' : '' }}">
-            <span>Eventos abiertos</span>
-            <span class="sidebar-badge">{{ number_format($openEventsCount, 0, ',', '.') }}</span>
-        </a>
+        @if($user?->hasPermission('view_events'))
+            <a href="{{ route('events.open') }}"
+               class="sidebar-link {{ $currentRoute === 'events.open' ? 'active' : '' }}">
+                <span>Eventos abiertos</span>
+                <span class="sidebar-badge">{{ number_format($openEventsCount, 0, ',', '.') }}</span>
+            </a>
+        @endif
 
-        <a href="{{ route('reports.index') }}"
-           class="sidebar-link {{ $currentRoute === 'reports.index' ? 'active' : '' }}">
-            <span>Reportes</span>
-        </a>
+        @if($user?->hasPermission('view_dashboard'))
+            <a href="{{ route('reports.index') }}"
+               class="sidebar-link {{ $currentRoute === 'reports.index' ? 'active' : '' }}">
+                <span>Reportes</span>
+            </a>
+        @endif
     </nav>
 
     <div class="sidebar-footer">

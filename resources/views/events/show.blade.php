@@ -174,9 +174,12 @@
         @endif
 
         <div class="stack-actions">
-            <a href="{{ route('events.export.event-pdf', $event->event_id) }}" class="btn btn-primary">
-                Descargar PDF
-            </a>
+            @if(auth()->user()?->hasPermission('export_pdf'))
+                <a href="{{ route('events.export.event-pdf', $event->event_id) }}" class="btn btn-primary">
+                    Descargar PDF
+                </a>
+            @endif
+
             @if(optional($event->evidence)->image_annotated_path)
                 <a href="{{ route('media.events.annotated', $event->event_id) }}" target="_blank" class="btn btn-secondary">
                     Ver Imagen Anotada

@@ -46,11 +46,23 @@ class User extends Authenticatable
 
     public function isAdmin(): bool
     {
-        return $this->role === 'admin';
+        return $this->hasRole('admin');
     }
 
     public function isViewer(): bool
     {
-        return $this->role === 'viewer';
+        return $this->hasRole('viewer');
+    }
+
+    public function hasRole(string|array $roles): bool
+    {
+        return in_array($this->role, (array) $roles, true);
+    }
+
+    public function hasPermission(string $permission): bool
+    {
+        $permissions = config('permissions.roles.' . $this->role, []);
+
+        return in_array($permission, $permissions, true);
     }
 }
