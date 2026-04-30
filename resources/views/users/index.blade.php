@@ -12,7 +12,7 @@
 @section('content')
     <div class="page-header">
         <div>
-            <h1>Usuarios</h1>
+            <h1>Gestión de usuarios</h1>
             <p class="topbar-subtitle">Administración de cuentas y accesos del sistema.</p>
         </div>
 
@@ -30,7 +30,7 @@
     @endif
 
     <div class="card">
-        <form method="GET" action="{{ route('users.index') }}" class="filters-inline">
+        <form method="GET" action="{{ route('users.index') }}" class="filters-inline" onsubmit="this.querySelector('button[type=submit]')?.classList.add('is-loading');">
             <div class="inline-field">
                 <label for="search" class="field-label">Buscar</label>
                 <input
@@ -106,7 +106,7 @@
                                         <button
                                             type="submit"
                                             class="btn btn-secondary"
-                                            onclick="return confirm('¿Eliminar este usuario?')"
+                                            onclick="return confirm('¿Eliminar definitivamente este usuario? Esta acción no se puede deshacer.')"
                                             @disabled(auth()->id() === $user->id)
                                         >
                                             Eliminar
@@ -117,7 +117,12 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="empty-state">No se encontraron usuarios.</td>
+                            <td colspan="6">
+                                <div class="empty-state-card">
+                                    <h3 class="empty-state-title">Sin usuarios encontrados</h3>
+                                    <p class="empty-state-description">Revisa el texto de búsqueda o crea una nueva cuenta.</p>
+                                </div>
+                            </td>
                         </tr>
                     @endforelse
                 </tbody>

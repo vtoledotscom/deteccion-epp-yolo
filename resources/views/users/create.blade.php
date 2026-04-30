@@ -14,48 +14,52 @@
         <a href="{{ route('users.index') }}" class="link-primary">Volver a usuarios</a>
     </div>
 
-    <div class="card">
-        <div class="card-header-column">
+    <div class="container">
+        <div class="">
             <h1>Crear usuario</h1>
             <p>Registra una nueva cuenta con el rol correspondiente.</p>
         </div>
 
-        <form method="POST" action="{{ route('users.store') }}" class="info-section">
+        <form method="POST" action="{{ route('users.store') }}" class="info-section" onsubmit="this.querySelector('button[type=submit]')?.classList.add('is-loading');">
             @csrf
 
             <div>
-                <label for="name" class="field-label">Nombre</label>
-                <input id="name" name="name" value="{{ old('name') }}" class="form-control" required>
+                <label for="name" class="field-label">Nombre completo</label>
+                <input id="name" name="name" value="{{ old('name') }}" class="form-control input-gradient-focus" required>
+                <p class="helper-text">Usa el nombre visible para identificar al usuario en el sistema.</p>
                 @error('name') <span class="epp-login-error">{{ $message }}</span> @enderror
             </div>
 
             <div>
-                <label for="email" class="field-label">Email</label>
-                <input id="email" name="email" type="email" value="{{ old('email') }}" class="form-control" required>
+                <label for="email" class="field-label">Correo electrónico</label>
+                <input id="email" name="email" type="email" value="{{ old('email') }}" class="form-control input-gradient-focus" required>
+                <p class="helper-text">Este correo se usará para iniciar sesión.</p>
                 @error('email') <span class="epp-login-error">{{ $message }}</span> @enderror
             </div>
 
             <div>
                 <label for="role" class="field-label">Rol</label>
-                <select id="role" name="role" class="form-control" required>
+                <select id="role" name="role" class="form-control input-gradient-focus" required>
                     @foreach ($roles as $role)
                         <option value="{{ $role }}" @selected(old('role', 'viewer') === $role)>
                             {{ $roleLabels[$role] ?? $role }}
                         </option>
                     @endforeach
                 </select>
+                <p class="helper-text">El rol define los módulos y acciones disponibles.</p>
                 @error('role') <span class="epp-login-error">{{ $message }}</span> @enderror
             </div>
 
             <div>
                 <label for="password" class="field-label">Contraseña</label>
-                <input id="password" name="password" type="password" class="form-control" required>
+                <input id="password" name="password" type="password" class="form-control input-gradient-focus" required>
+                <p class="helper-text">Debe cumplir las reglas de seguridad configuradas.</p>
                 @error('password') <span class="epp-login-error">{{ $message }}</span> @enderror
             </div>
 
             <div>
                 <label for="password_confirmation" class="field-label">Confirmar contraseña</label>
-                <input id="password_confirmation" name="password_confirmation" type="password" class="form-control" required>
+                <input id="password_confirmation" name="password_confirmation" type="password" class="form-control input-gradient-focus" required>
             </div>
 
             <label class="toolbar-left">
@@ -64,7 +68,7 @@
             </label>
 
             <div class="toolbar-left">
-                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button type="submit" class="btn btn-gradient-primary">Guardar</button>
                 <a href="{{ route('users.index') }}" class="btn btn-secondary">Cancelar</a>
             </div>
         </form>

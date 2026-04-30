@@ -45,7 +45,10 @@
             <p>Detectado el {{ optional($event->event_confirmed_at)->format('d-m-Y H:i:s') }}</p>
         </div>
 
-        <span class="badge success large">Resuelto</span>
+    </div>
+
+    <div class="page-header">
+        <h2>Resumen del evento</h2>
     </div>
 
     <div class="summary-grid">
@@ -60,11 +63,6 @@
         </div>
 
         <div class="summary-item">
-            <span class="summary-label">Estado detector</span>
-            <strong>{{ $event->status }}</strong>
-        </div>
-
-        <div class="summary-item">
             <span class="summary-label">Incumplimiento</span>
             <div class="badge-group">
                 @foreach($violationLabels($event->violation_codes_json ?? []) as $violation)
@@ -76,8 +74,8 @@
 
     <div class="detail-grid">
         <div class="card">
-            <div class="card-header-column">
-                <h3>Evidencia</h3>
+            <div>
+                <h2>Evidencia destacada</h2>
             </div>
 
             @if(optional($event->evidence)->image_annotated_path)
@@ -113,8 +111,8 @@
         </div>
 
         <div class="card">
-            <div class="card-header-column">
-                <h3>Información de cierre</h3>
+            <div>
+                <h2>Información de cierre</h2>
             </div>
 
             <div class="info-section">
@@ -124,7 +122,7 @@
                 </div>
                 <div class="info-block">
                     <span class="info-label">Fecha de cierre</span>
-                    <span>{{ optional($event->human_resolved_at)->format('d-m-Y H:i:s') }}</span>
+                    <span class="badge success">{{ optional($event->human_resolved_at)->format('d-m-Y H:i:s') }}</span>
                 </div>
                 <div class="info-block">
                     <span class="info-label">Persona notificada</span>
@@ -143,42 +141,28 @@
     </div>
 
     <div class="card">
-        <div class="card-header-column">
-            <h3>Historial de acciones</h3>
+        <div class="">
+            <h2>Historial de acciones</h2>
         </div>
 
-        <div class="table-wrapper">
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Fecha</th>
-                        <th>Acción</th>
-                        <th>Usuario</th>
-                        <th>Notificado</th>
-                        <th>Método</th>
-                        <th>Observación</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($event->actions->sortByDesc('created_at') as $action)
-                        <tr>
-                            <td>{{ optional($action->created_at)->format('d-m-Y H:i:s') }}</td>
-                            <td>{{ $actionLabel($action->action) }}</td>
-                            <td>
-                                <strong>{{ optional($action->user)->name ?? 'N/D' }}</strong><br>
-                                <small>{{ optional($action->user)->email ?? '' }}</small>
-                            </td>
-                            <td>{{ $action->notified_person ?? 'N/D' }}</td>
-                            <td>{{ $methodLabel($action->notification_method) }}</td>
-                            <td>{{ $action->note }}</td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6" class="empty-state">No hay acciones registradas para este evento.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+        <div class="info-section">
+            @forelse($event->actions->sortByDesc('created_at') as $action)
+                <div class="info-block">
+                    <strong>{{ optional($action->user)->name ?? 'N/D' }}</strong>
+                    <span> realizó acción <span class="badge-gradient-primary badge">{{ $actionLabel($action->action) }}</span> el {{ optional($action->created_at)->format('d-m-Y H:i:s') }}.</span>
+                    @if($action->notified_person || $action->notification_method)
+                        <div class="topbar-subtitle">Notificado: {{ $action->notified_person ?? 'N/D' }} · Método: {{ $methodLabel($action->notification_method) }}</div>
+                    @endif
+                    @if($action->note)
+                        <div class="topbar-subtitle">{{ $action->note }}</div>
+                    @endif
+                </div>
+            @empty
+                <div class="empty-state-card">
+                    <h3 class="empty-state-title">Sin acciones registradas</h3>
+                    <p class="empty-state-description">No hay historial operativo asociado a este evento.</p>
+                </div>
+            @endforelse
         </div>
     </div>
 @endsection

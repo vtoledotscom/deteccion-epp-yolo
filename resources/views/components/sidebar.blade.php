@@ -24,8 +24,12 @@
     <div class="sidebar-logo">
         <div class="logo-mark"><img src="{{ asset('images/logo-tscom.svg') }}" alt="logo-tscom" /></div>
     </div>
+    <div class="container-logo-sidebar">
+        <h1 class="topbar-title text-gradient-primary">EPPA detección</h1>
+        <p class="topbar-subtitle">Panel de Monitoreo Operacional</p>
+    </div>
 
-    <div class="sidebar-section-title">MENÚ PRINCIPAL</div>
+    <div class="sidebar-section-title">Menú de navegación</div>
 
     <nav class="sidebar-nav">
         @if($user?->hasPermission('view_dashboard'))
@@ -46,13 +50,13 @@
             <a href="{{ route('events.open') }}"
                class="sidebar-link {{ str_starts_with((string) $currentRoute, 'events.open') ? 'active' : '' }}">
                 <span>Eventos abiertos</span>
-                <span class="sidebar-badge">{{ number_format($openEventsCount, 0, ',', '.') }}</span>
+                <span class="sidebar-badge badge-gradient-primary">{{ number_format($openEventsCount, 0, ',', '.') }}</span>
             </a>
 
             <a href="{{ route('events.closed') }}"
                class="sidebar-link {{ str_starts_with((string) $currentRoute, 'events.closed') ? 'active' : '' }}">
                 <span>Eventos cerrados</span>
-                <span class="sidebar-badge">{{ number_format($closedEventsCount, 0, ',', '.') }}</span>
+                <span class="sidebar-badge badge-gradient-primary">{{ number_format($closedEventsCount, 0, ',', '.') }}</span>
             </a>
         @endif
 
@@ -79,17 +83,19 @@
     </nav>
 
     <div class="sidebar-footer">
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit" class="btn btn-secondary">
+                Cerrar sesión
+            </button>
+            
+        </form>
         <div class="sidebar-user">
             <div class="avatar">{{ $user?->initials() ?? 'U' }}</div>
             <div>
                 <div class="user-name">{{ $user?->name ?? 'Usuario' }}</div>
                 <div class="user-role">{{ $roleLabel }}</div>
             </div>
-        </div>
-
-        <div class="sidebar-support">
-            <div>Soporte TSCOM</div>
-            <small>+56 2 2912 7530</small>
         </div>
     </div>
 </div>
