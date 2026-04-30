@@ -46,7 +46,7 @@
             </a>
         @endif
 
-        @if($user?->hasPermission('view_dashboard'))
+        @if($user?->hasPermission('view_reports'))
             <a href="{{ route('reports.index') }}"
                class="sidebar-link {{ $currentRoute === 'reports.index' ? 'active' : '' }}">
                 <span>Reportes</span>
