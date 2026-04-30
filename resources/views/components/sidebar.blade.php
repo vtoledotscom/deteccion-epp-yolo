@@ -1,5 +1,19 @@
 @php
+    use App\Models\EppEvent;
+
     $currentRoute = request()->route()?->getName();
+    $user = auth()->user();
+    $openEventsCount = EppEvent::query()
+        ->where('event_type', 'violation_started')
+        ->whereNull('resolved_by_event_id')
+        ->count();
+    $roleLabel = match ($user?->role) {
+        'admin' => 'Administrador',
+        'supervisor' => 'Supervisor',
+        'operator' => 'Operador',
+        'viewer' => 'Visualizador',
+        default => 'Usuario',
+    };
 @endphp
 
 <div class="sidebar-wrapper">
@@ -10,34 +24,49 @@
     <div class="sidebar-section-title">MENÚ PRINCIPAL</div>
 
     <nav class="sidebar-nav">
-        <a href="{{ route('dashboard') }}"
-           class="sidebar-link {{ $currentRoute === 'dashboard' ? 'active' : '' }}">
-            <span>Dashboard</span>
-        </a>
+        @if($user?->hasPermission('view_dashboard'))
+            <a href="{{ route('dashboard') }}"
+               class="sidebar-link {{ $currentRoute === 'dashboard' ? 'active' : '' }}">
+                <span>Dashboard</span>
+            </a>
+        @endif
 
-        <a href="{{ route('events.index') }}"
-           class="sidebar-link {{ $currentRoute === 'events.index' ? 'active' : '' }}">
-            <span>Eventos</span>
-        </a>
+        @if($user?->hasPermission('view_events'))
+            <a href="{{ route('events.index') }}"
+               class="sidebar-link {{ $currentRoute === 'events.index' ? 'active' : '' }}">
+                <span>Eventos</span>
+            </a>
+        @endif
 
-        <a href="{{ route('events.open') }}"
-           class="sidebar-link {{ $currentRoute === 'events.open' ? 'active' : '' }}">
-            <span>Eventos abiertos</span>
-            <span class="sidebar-badge">32</span>
-        </a>
+        @if($user?->hasPermission('view_events'))
+            <a href="{{ route('events.open') }}"
+               class="sidebar-link {{ $currentRoute === 'events.open' ? 'active' : '' }}">
+                <span>Eventos abiertos</span>
+                <span class="sidebar-badge">{{ number_format($openEventsCount, 0, ',', '.') }}</span>
+            </a>
+        @endif
 
-        <a href="{{ route('reports.index') }}"
-           class="sidebar-link {{ $currentRoute === 'reports.index' ? 'active' : '' }}">
-            <span>Reportes</span>
-        </a>
+        @if($user?->hasPermission('view_dashboard'))
+            <a href="{{ route('reports.index') }}"
+               class="sidebar-link {{ $currentRoute === 'reports.index' ? 'active' : '' }}">
+                <span>Reportes</span>
+            </a>
+        @endif
+
+        @if($user?->hasPermission('manage_users'))
+            <a href="{{ route('users.index') }}"
+               class="sidebar-link {{ str_starts_with((string) $currentRoute, 'users.') ? 'active' : '' }}">
+                <span>Usuarios</span>
+            </a>
+        @endif
     </nav>
 
     <div class="sidebar-footer">
         <div class="sidebar-user">
-            <div class="avatar">JS</div>
+            <div class="avatar">{{ $user?->initials() ?? 'U' }}</div>
             <div>
-                <div class="user-name">Juan Salgado</div>
-                <div class="user-role">Supervisor Operacional</div>
+                <div class="user-name">{{ $user?->name ?? 'Usuario' }}</div>
+                <div class="user-role">{{ $roleLabel }}</div>
             </div>
         </div>
 
