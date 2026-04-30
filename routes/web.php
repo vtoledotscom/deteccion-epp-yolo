@@ -5,13 +5,14 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventEvidenceController;
 use App\Http\Controllers\EventExportController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/home', function () {
     return redirect()->route('dashboard');
 })->name('home');
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'active'])->group(function () {
 
     Route::get('/', function () {
         return redirect()->route('dashboard');
@@ -96,4 +97,22 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/reports', [ReportController::class, 'index'])
         ->middleware('permission:view_reports')
         ->name('reports.index');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Usuarios
+    |--------------------------------------------------------------------------
+    */
+
+    Route::resource('users', UserController::class)
+        ->except(['show'])
+        ->middleware('permission:manage_users');
+
+    Route::patch('/users/{user}/activate', [UserController::class, 'activate'])
+        ->middleware('permission:manage_users')
+        ->name('users.activate');
+
+    Route::patch('/users/{user}/disable', [UserController::class, 'disable'])
+        ->middleware('permission:manage_users')
+        ->name('users.disable');
 });

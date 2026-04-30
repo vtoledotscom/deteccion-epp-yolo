@@ -52,6 +52,13 @@
                 <span>Reportes</span>
             </a>
         @endif
+
+        @if($user?->hasPermission('manage_users'))
+            <a href="{{ route('users.index') }}"
+               class="sidebar-link {{ str_starts_with((string) $currentRoute, 'users.') ? 'active' : '' }}">
+                <span>Usuarios</span>
+            </a>
+        @endif
     </nav>
 
     <div class="sidebar-footer">
