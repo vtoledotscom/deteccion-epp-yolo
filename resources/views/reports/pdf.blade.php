@@ -65,10 +65,10 @@
 
     <table class="summary">
         <tr>
-            <td><strong>Total eventos</strong><br>{{ number_format($summary['total_events'], 0, ',', '.') }}</td>
-            <td><strong>Infracciones iniciadas</strong><br>{{ number_format($summary['started_violations'], 0, ',', '.') }}</td>
-            <td><strong>Infracciones resueltas</strong><br>{{ number_format($summary['resolved_violations'], 0, ',', '.') }}</td>
-            <td><strong>Eventos abiertos</strong><br>{{ number_format($summary['open_violations'], 0, ',', '.') }}</td>
+            <td><strong>Total de eventos detectados</strong><br>{{ number_format($summary['total_events'], 0, ',', '.') }}</td>
+            <td><strong>Incumplimientos detectados</strong><br>{{ number_format($summary['non_compliant_events'], 0, ',', '.') }}</td>
+            <td><strong>Pendientes de gestión</strong><br>{{ number_format($summary['human_pending_events'], 0, ',', '.') }}</td>
+            <td><strong>Gestionados y cerrados</strong><br>{{ number_format($summary['human_resolved_events'], 0, ',', '.') }}</td>
         </tr>
     </table>
 

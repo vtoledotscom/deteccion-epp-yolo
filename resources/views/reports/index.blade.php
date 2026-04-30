@@ -102,25 +102,25 @@
     <div class="kpi-card">
         <div class="kpi-icon blue"></div>
         <div class="kpi-value">{{ number_format($summary['total_events'], 0, ',', '.') }}</div>
-        <div class="kpi-label">Total Eventos</div>
+        <div class="kpi-label">Total de eventos detectados</div>
     </div>
 
     <div class="kpi-card">
         <div class="kpi-icon red"></div>
-        <div class="kpi-value">{{ number_format($summary['started_violations'], 0, ',', '.') }}</div>
-        <div class="kpi-label">Infracciones Iniciadas</div>
-    </div>
-
-    <div class="kpi-card">
-        <div class="kpi-icon green"></div>
-        <div class="kpi-value">{{ number_format($summary['resolved_violations'], 0, ',', '.') }}</div>
-        <div class="kpi-label">Infracciones Resueltas</div>
+        <div class="kpi-value">{{ number_format($summary['non_compliant_events'], 0, ',', '.') }}</div>
+        <div class="kpi-label">Incumplimientos detectados</div>
     </div>
 
     <div class="kpi-card">
         <div class="kpi-icon orange"></div>
-        <div class="kpi-value">{{ number_format($summary['open_violations'], 0, ',', '.') }}</div>
-        <div class="kpi-label">Eventos abiertos actuales</div>
+        <div class="kpi-value">{{ number_format($summary['human_pending_events'], 0, ',', '.') }}</div>
+        <div class="kpi-label">Pendientes de gestión</div>
+    </div>
+
+    <div class="kpi-card">
+        <div class="kpi-icon green"></div>
+        <div class="kpi-value">{{ number_format($summary['human_resolved_events'], 0, ',', '.') }}</div>
+        <div class="kpi-label">Gestionados y cerrados</div>
     </div>
 </div>
 

@@ -4,8 +4,12 @@
     $currentRoute = request()->route()?->getName();
     $user = auth()->user();
     $openEventsCount = EppEvent::query()
-        ->where('event_type', 'violation_started')
-        ->whereNull('resolved_by_event_id')
+        ->where('human_review_status', 'pending')
+        ->where('status', 'non_compliant')
+        ->count();
+    $closedEventsCount = EppEvent::query()
+        ->where('human_review_status', 'resolved')
+        ->where('status', 'non_compliant')
         ->count();
     $roleLabel = match ($user?->role) {
         'admin' => 'Administrador',
@@ -38,11 +42,17 @@
             </a>
         @endif
 
-        @if($user?->hasPermission('view_events'))
+        @if($user?->hasPermission('view_open_events'))
             <a href="{{ route('events.open') }}"
-               class="sidebar-link {{ $currentRoute === 'events.open' ? 'active' : '' }}">
+               class="sidebar-link {{ str_starts_with((string) $currentRoute, 'events.open') ? 'active' : '' }}">
                 <span>Eventos abiertos</span>
                 <span class="sidebar-badge">{{ number_format($openEventsCount, 0, ',', '.') }}</span>
+            </a>
+
+            <a href="{{ route('events.closed') }}"
+               class="sidebar-link {{ str_starts_with((string) $currentRoute, 'events.closed') ? 'active' : '' }}">
+                <span>Eventos cerrados</span>
+                <span class="sidebar-badge">{{ number_format($closedEventsCount, 0, ',', '.') }}</span>
             </a>
         @endif
 
@@ -57,6 +67,13 @@
             <a href="{{ route('users.index') }}"
                class="sidebar-link {{ str_starts_with((string) $currentRoute, 'users.') ? 'active' : '' }}">
                 <span>Usuarios</span>
+            </a>
+        @endif
+
+        @if($user?->hasPermission('view_user_activity_logs'))
+            <a href="{{ route('activity-logs.index') }}"
+               class="sidebar-link {{ str_starts_with((string) $currentRoute, 'activity-logs.') ? 'active' : '' }}">
+                <span>Auditoría</span>
             </a>
         @endif
     </nav>

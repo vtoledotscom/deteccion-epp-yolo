@@ -19,6 +19,7 @@ class EppEvent extends Model
         'event_observed_at' => 'datetime',
         'event_confirmed_at' => 'datetime',
         'resolved_at' => 'datetime',
+        'human_resolved_at' => 'datetime',
         'created_at' => 'datetime',
         'violation_codes_json' => 'array',
         'person_box_json' => 'array',
@@ -32,6 +33,16 @@ class EppEvent extends Model
     public function evidence()
     {
         return $this->hasOne(EppEventEvidence::class, 'event_id', 'event_id');
+    }
+
+    public function actions()
+    {
+        return $this->hasMany(EventAction::class, 'event_id', 'event_id');
+    }
+
+    public function humanResolvedBy()
+    {
+        return $this->belongsTo(User::class, 'human_resolved_by');
     }
 
     /**

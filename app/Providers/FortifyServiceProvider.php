@@ -5,8 +5,12 @@ namespace App\Providers;
 use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Models\User;
+use App\Support\ActivityLogger;
+use Illuminate\Auth\Events\Login;
+use Illuminate\Auth\Events\Logout;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
@@ -31,6 +35,7 @@ class FortifyServiceProvider extends ServiceProvider
         $this->configureActions();
         $this->configureViews();
         $this->configureRateLimiting();
+        $this->configureActivityLogging();
     }
 
     /**
@@ -79,6 +84,33 @@ class FortifyServiceProvider extends ServiceProvider
             $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());
 
             return Limit::perMinute(5)->by($throttleKey);
+        });
+    }
+
+    private function configureActivityLogging(): void
+    {
+        Event::listen(Login::class, function (Login $event): void {
+            if ($event->user instanceof User) {
+                ActivityLogger::log(
+                    'login',
+                    'auth',
+                    'Login exitoso',
+                    user: $event->user,
+                    request: request(),
+                );
+            }
+        });
+
+        Event::listen(Logout::class, function (Logout $event): void {
+            if ($event->user instanceof User) {
+                ActivityLogger::log(
+                    'logout',
+                    'auth',
+                    'Logout',
+                    user: $event->user,
+                    request: request(),
+                );
+            }
         });
     }
 }

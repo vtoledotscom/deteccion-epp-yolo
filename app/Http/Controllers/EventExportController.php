@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\EppEvent;
+use App\Support\ActivityLogger;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -15,6 +16,17 @@ class EventExportController extends Controller
         $events = $this->buildFilteredQuery($request)
             ->orderByDesc('event_confirmed_at')
             ->get();
+
+        ActivityLogger::log(
+            'download_csv',
+            'events',
+            'Descarga CSV de eventos',
+            metadata: [
+                'records' => $events->count(),
+                'filters' => $this->safeFilters($request),
+            ],
+            request: $request,
+        );
 
         $filename = 'eventos_' . now()->format('Ymd_His') . '.csv';
 
@@ -61,6 +73,17 @@ class EventExportController extends Controller
             ->limit(300)
             ->get();
 
+        ActivityLogger::log(
+            'download_pdf',
+            'events',
+            'Descarga PDF de eventos',
+            metadata: [
+                'records' => $events->count(),
+                'filters' => $this->safeFilters($request),
+            ],
+            request: $request,
+        );
+
         $dateFrom = $request->input('date_from')
             ? Carbon::parse($request->input('date_from'))->startOfDay()
             : now()->subDays(7)->startOfDay();
@@ -96,6 +119,18 @@ class EventExportController extends Controller
             ->with('evidence')
             ->where('event_id', $eventId)
             ->firstOrFail();
+
+        ActivityLogger::log(
+            'download_event_pdf',
+            'events',
+            'Descarga PDF de evento',
+            'epp_event',
+            $event->event_id,
+            [
+                'display_id' => $event->display_id,
+                'camera_id' => $event->camera_id,
+            ],
+        );
 
         $pdf = Pdf::loadView('events.event-pdf', [
             'event' => $event,
@@ -145,5 +180,18 @@ class EventExportController extends Controller
         }
 
         return $query;
+    }
+
+    private function safeFilters(Request $request): array
+    {
+        return [
+            'date_from' => $request->input('date_from'),
+            'date_to' => $request->input('date_to'),
+            'camera' => $request->input('camera', 'all'),
+            'scenario' => $request->input('scenario', 'all'),
+            'event_type' => $request->input('event_type', 'all'),
+            'status' => $request->input('status', 'all'),
+            'search' => $request->input('search', ''),
+        ];
     }
 }

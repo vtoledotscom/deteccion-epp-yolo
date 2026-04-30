@@ -8,7 +8,10 @@
         <nav class="topbar-menu">
             <a href="{{ route('dashboard') }}">Dashboard</a>
             <a href="{{ route('events.index') }}">Eventos</a>
-            <a href="{{ route('events.open') }}">Eventos abiertos</a>
+            @if(auth()->user()?->hasPermission('view_open_events'))
+                <a href="{{ route('events.open') }}">Eventos abiertos</a>
+                <a href="{{ route('events.closed') }}">Eventos cerrados</a>
+            @endif
             <a href="{{ route('reports.index') }}">Reportes</a>
         </nav>
 
