@@ -504,6 +504,7 @@ a {
 }
 
 .inline-field {
+    width: calc(30% + 16px);
     min-width: 220px;
 }
 
