@@ -1,6 +1,6 @@
 <div class="topbar-wrapper">
     <div>
-        <h1 class="topbar-title">EPPA detección</h1>
+        <h1 class="topbar-title text-gradient-primary">EPPA detección</h1>
         <p class="topbar-subtitle">Panel de Monitoreo Operacional</p>
     </div>
 

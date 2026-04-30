@@ -37,7 +37,7 @@
     </div>
 
     <div class="card">
-        <form method="GET" action="{{ route('activity-logs.index') }}" class="filters-grid">
+        <form method="GET" action="{{ route('activity-logs.index') }}" class="filters-grid" onsubmit="this.querySelector('button[type=submit]')?.classList.add('is-loading');">
             <div>
                 <label for="user" class="field-label">Usuario</label>
                 <input id="user" name="user" value="{{ $filters['user'] }}" class="form-control" placeholder="Nombre o email">
@@ -96,16 +96,15 @@
 
             <div class="report-actions-cell">
                 <button type="submit" class="btn btn-primary">Filtrar</button>
+                <a href="{{ route('activity-logs.index') }}" class="btn btn-secondary">Limpiar filtros</a>
             </div>
         </form>
-
-        <div class="toolbar-left">
-            <a href="{{ route('activity-logs.index') }}" class="btn btn-secondary">Limpiar filtros</a>
-            <a href="{{ route('activity-logs.export.csv', request()->query()) }}" class="btn btn-primary">Exportar CSV</a>
-        </div>
     </div>
 
     <div class="card">
+        <div class="toolbar-left audit-export">
+            <a href="{{ route('activity-logs.export.csv', request()->query()) }}" class="btn btn-primary">Exportar CSV</a>
+        </div>
         <div class="table-wrapper">
             <table class="data-table">
                 <thead>
@@ -135,7 +134,12 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="empty-state">No hay registros para los filtros seleccionados.</td>
+                            <td colspan="7">
+                                <div class="empty-state-card">
+                                    <h3 class="empty-state-title">Sin actividad registrada</h3>
+                                    <p class="empty-state-description">No encontramos logs con los filtros aplicados.</p>
+                                </div>
+                            </td>
                         </tr>
                     @endforelse
                 </tbody>

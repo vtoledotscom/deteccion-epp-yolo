@@ -15,48 +15,52 @@
     </div>
 
     <div class="card">
-        <div class="card-header-column">
+        <div class="card-header-gradient">
             <h1>Editar usuario</h1>
             <p>Actualiza los datos de acceso y estado de la cuenta.</p>
         </div>
 
-        <form method="POST" action="{{ route('users.update', $user) }}" class="info-section">
+        <form method="POST" action="{{ route('users.update', $user) }}" class="info-section" onsubmit="this.querySelector('button[type=submit]')?.classList.add('is-loading');">
             @csrf
             @method('PUT')
 
             <div>
-                <label for="name" class="field-label">Nombre</label>
-                <input id="name" name="name" value="{{ old('name', $user->name) }}" class="form-control" required>
+                <label for="name" class="field-label">Nombre completo</label>
+                <input id="name" name="name" value="{{ old('name', $user->name) }}" class="form-control input-gradient-focus" required>
+                <p class="helper-text">Nombre visible en menús, auditoría y acciones del sistema.</p>
                 @error('name') <span class="epp-login-error">{{ $message }}</span> @enderror
             </div>
 
             <div>
-                <label for="email" class="field-label">Email</label>
-                <input id="email" name="email" type="email" value="{{ old('email', $user->email) }}" class="form-control" required>
+                <label for="email" class="field-label">Correo electrónico</label>
+                <input id="email" name="email" type="email" value="{{ old('email', $user->email) }}" class="form-control input-gradient-focus" required>
+                <p class="helper-text">Mantén este correo actualizado para el acceso del usuario.</p>
                 @error('email') <span class="epp-login-error">{{ $message }}</span> @enderror
             </div>
 
             <div>
                 <label for="role" class="field-label">Rol</label>
-                <select id="role" name="role" class="form-control" required>
+                <select id="role" name="role" class="form-control input-gradient-focus" required>
                     @foreach ($roles as $role)
                         <option value="{{ $role }}" @selected(old('role', $user->role) === $role)>
                             {{ $roleLabels[$role] ?? $role }}
                         </option>
                     @endforeach
                 </select>
+                <p class="helper-text">Cambiar el rol ajusta los permisos efectivos.</p>
                 @error('role') <span class="epp-login-error">{{ $message }}</span> @enderror
             </div>
 
             <div>
                 <label for="password" class="field-label">Nueva contraseña</label>
-                <input id="password" name="password" type="password" class="form-control">
+                <input id="password" name="password" type="password" class="form-control input-gradient-focus">
+                <p class="helper-text">Déjalo en blanco para conservar la contraseña actual.</p>
                 @error('password') <span class="epp-login-error">{{ $message }}</span> @enderror
             </div>
 
             <div>
                 <label for="password_confirmation" class="field-label">Confirmar nueva contraseña</label>
-                <input id="password_confirmation" name="password_confirmation" type="password" class="form-control">
+                <input id="password_confirmation" name="password_confirmation" type="password" class="form-control input-gradient-focus">
             </div>
 
             <label class="toolbar-left">
@@ -75,7 +79,7 @@
             @endif
 
             <div class="toolbar-left">
-                <button type="submit" class="btn btn-primary">Actualizar</button>
+                <button type="submit" class="btn btn-gradient-primary">Actualizar</button>
                 <a href="{{ route('users.index') }}" class="btn btn-secondary">Cancelar</a>
             </div>
         </form>

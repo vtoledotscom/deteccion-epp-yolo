@@ -42,13 +42,14 @@
 @endphp
 
 @section('content')
-<div class="card">
-    <div class="card-header-column">
-        <h2>Reportes</h2>
-        <p>Genera informes y análisis de eventos</p>
+<div class="page-header">
+    <div>
+        <h1>Reportes</h1>
+        <p class="topbar-subtitle">Consulta indicadores, resúmenes y eventos filtrados</p>
     </div>
-
-    <form method="GET" action="{{ route('reports.index') }}" class="filters-grid">
+</div>
+<div class="card">
+    <form method="GET" action="{{ route('reports.index') }}" class="filters-grid" onsubmit="this.querySelector('button[type=submit]')?.classList.add('is-loading');">
         <div>
             <label class="field-label">Fecha desde</label>
             <input class="form-control" type="date" name="date_from" value="{{ $dateFrom }}">
@@ -92,8 +93,8 @@
             </select>
         </div>
 
-        <div class="report-actions-cell">
-            <button class="btn btn-primary" type="submit">Generar Reporte</button>
+        <div class="report-actions-cell-reports">
+            <button class="btn btn-primary" type="submit">Aplicar filtros</button>
         </div>
     </form>
 </div>
@@ -147,7 +148,10 @@
                     @empty
                         <tr>
                             <td colspan="2">
-                                <div class="empty-state">No hay datos para el período seleccionado.</div>
+                                <div class="empty-state-card">
+                                    <h3 class="empty-state-title">Sin datos por escenario</h3>
+                                    <p class="empty-state-description">Prueba con otro rango de fechas o filtro de cámara.</p>
+                                </div>
                             </td>
                         </tr>
                     @endforelse
@@ -178,7 +182,10 @@
                     @empty
                         <tr>
                             <td colspan="2">
-                                <div class="empty-state">No hay datos para el período seleccionado.</div>
+                                <div class="empty-state-card">
+                                    <h3 class="empty-state-title">Sin datos por cámara</h3>
+                                    <p class="empty-state-description">Amplía los filtros para ver actividad agrupada.</p>
+                                </div>
                             </td>
                         </tr>
                     @endforelse
@@ -189,8 +196,8 @@
 </div>
 
 <div class="card">
-    <div class="card-header">
-        <h3>Listado Detallado</h3>
+    <div class="card-header reports-header">
+        <h2>Detalle de eventos</h2>
 
         @if(auth()->user()?->hasPermission('export_csv') || auth()->user()?->hasPermission('export_pdf'))
             <div class="toolbar-right">
@@ -217,7 +224,7 @@
                     <th>Fecha</th>
                     <th>Cámara</th>
                     <th>Escenario</th>
-                    <th>Tipo</th>
+                    <th>Estado IA</th>
                     <th>Violaciones</th>
                 </tr>
             </thead>
@@ -246,7 +253,10 @@
                 @empty
                     <tr>
                         <td colspan="6">
-                            <div class="empty-state">No hay eventos para el período seleccionado.</div>
+                            <div class="empty-state-card">
+                                <h3 class="empty-state-title">Sin resultados de reportes</h3>
+                                <p class="empty-state-description">No encontramos eventos con los filtros aplicados.</p>
+                            </div>
                         </td>
                     </tr>
                 @endforelse

@@ -26,13 +26,13 @@
 @section('content')
     <div class="page-header">
         <div>
-            <h1>Eventos Abiertos</h1>
+            <h1>Eventos pendientes de gestión</h1>
             <p class="topbar-subtitle">Eventos pendientes de notificación y cierre humano.</p>
         </div>
     </div>
 
     <div class="card">
-        <form method="GET" action="{{ route('events.open') }}" class="filters-grid">
+        <form method="GET" action="{{ route('events.open') }}" class="filters-grid" onsubmit="this.querySelector('button[type=submit]')?.classList.add('is-loading');">
             <div>
                 <label for="camera" class="field-label">Cámara</label>
                 <select id="camera" name="camera" class="form-control">
@@ -64,12 +64,9 @@
 
             <div class="report-actions-cell">
                 <button type="submit" class="btn btn-primary">Filtrar</button>
+                <a href="{{ route('events.open') }}" class="btn btn-secondary">Limpiar</a>
             </div>
         </form>
-
-        <div class="toolbar-left">
-            <a href="{{ route('events.open') }}" class="btn btn-secondary">Limpiar</a>
-        </div>
     </div>
 
     <div class="card">
@@ -82,7 +79,7 @@
                         <th>Cámara</th>
                         <th>Zona</th>
                         <th>Incumplimiento</th>
-                        <th>Estado humano</th>
+                        <th>Gestión</th>
                         <th>Acción</th>
                     </tr>
                 </thead>
@@ -107,7 +104,12 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="empty-state">No hay eventos abiertos pendientes.</td>
+                            <td colspan="7">
+                                <div class="empty-state-card">
+                                    <h3 class="empty-state-title">Sin eventos pendientes</h3>
+                                    <p class="empty-state-description">No hay incumplimientos pendientes de gestión humana.</p>
+                                </div>
+                            </td>
                         </tr>
                     @endforelse
                 </tbody>

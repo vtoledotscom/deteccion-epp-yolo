@@ -1,5 +1,7 @@
 <x-layouts::auth :title="__('Iniciar sesión')">
     <div class="epp-login-page">
+        <div class="brand-top-bar"></div>
+        <div class="brand-bottom-bar"></div>
         <div class="epp-login-bg-shape epp-login-bg-shape-left"></div>
         <div class="epp-login-bg-shape epp-login-bg-shape-right"></div>
 
@@ -7,8 +9,8 @@
             <div class="epp-login-brand">
                 <img src="{{ asset('images/logo-tscom.svg') }}" alt="TSCOM" class="epp-login-logo">
 
-                <h1>Detección de EPP</h1>
-                <p>Panel de Monitoreo Operacional</p>
+                <h1>EPPA detector</h1>
+                <p>Ingresa tus credenciales de acceso</p>
             </div>
 
             <x-auth-session-status class="epp-login-status" :status="session('status')" />
@@ -17,7 +19,7 @@
                 @csrf
 
                 <div class="epp-login-field">
-                    <label for="email">Usuario</label>
+                    <label for="email">Correo electrónico</label>
                     <input
                         id="email"
                         name="email"
@@ -26,7 +28,7 @@
                         required
                         autofocus
                         autocomplete="email"
-                        placeholder="Ingresa tu usuario"
+                        placeholder="Ingresa tu correo"
                     >
 
                     @error('email')
@@ -63,9 +65,10 @@
                     </a>
                 @endif
 
-                <button type="submit" class="epp-login-button">
-                    Iniciar Sesión
-                </button>
+
+                <flux:button type="submit" class="btn-gradient-primary">
+                    Iniciar sesión
+                </flux:button>
             </form>
         </div>
     </div>

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $title ?? 'EPPA detección' }}</title>
+    <link rel="icon" href="{{ asset('images/favicon2.ico') }}" sizes="any" type="image/x-icon">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
@@ -15,10 +16,6 @@
         </aside>
 
         <div class="app-main">
-            <header class="app-topbar">
-                @include('components.topbar')
-            </header>
-
             <main class="app-content">
                 @yield('content')
                 {{ $slot ?? '' }}

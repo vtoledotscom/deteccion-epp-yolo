@@ -68,52 +68,53 @@
         </div>
     </div>
 
-    <div class="toolbar">
-        <div class="toolbar-left">
-            Mostrando {{ $events->count() }} de {{ $events->total() }} eventos
-        </div>
-
-        @if(auth()->user()?->hasPermission('export_csv') || auth()->user()?->hasPermission('export_pdf'))
-            <div class="toolbar-right">
-                <input type="text"
-                    wire:model.live.debounce.500ms="search"
-                    placeholder="Buscar por ID..."
-                    class="form-control search-input">
-
-                @if(auth()->user()?->hasPermission('export_csv'))
-                    <a href="{{ route('events.export.csv', [
-                        'date_from' => $dateFrom,
-                        'date_to' => $dateTo,
-                        'camera' => $camera,
-                        'scenario' => $scenario,
-                        'event_type' => $eventType,
-                        'status' => $status,
-                        'search' => $search,
-                    ]) }}"
-                    class="btn btn-secondary">
-                        Exportar CSV
-                    </a>
-                @endif
-
-                @if(auth()->user()?->hasPermission('export_pdf'))
-                    <a href="{{ route('events.export.pdf', [
-                        'date_from' => $dateFrom,
-                        'date_to' => $dateTo,
-                        'camera' => $camera,
-                        'scenario' => $scenario,
-                        'event_type' => $eventType,
-                        'status' => $status,
-                        'search' => $search,
-                    ]) }}"
-                    class="btn btn-primary">
-                        Exportar PDF
-                    </a>
-                @endif
-            </div>
-        @endif
-    </div>
+    
 
     <div class="card">
+        <div class="toolbar">
+            <div class="toolbar-left">
+                Mostrando {{ $events->count() }} de {{ $events->total() }} eventos
+            </div>
+
+            @if(auth()->user()?->hasPermission('export_csv') || auth()->user()?->hasPermission('export_pdf'))
+                <div class="toolbar-right">
+                    <input type="text"
+                        wire:model.live.debounce.500ms="search"
+                        placeholder="Buscar por ID..."
+                        class="form-control search-input">
+
+                    @if(auth()->user()?->hasPermission('export_csv'))
+                        <a href="{{ route('events.export.csv', [
+                            'date_from' => $dateFrom,
+                            'date_to' => $dateTo,
+                            'camera' => $camera,
+                            'scenario' => $scenario,
+                            'event_type' => $eventType,
+                            'status' => $status,
+                            'search' => $search,
+                        ]) }}"
+                        class="btn btn-secondary">
+                            Exportar CSV
+                        </a>
+                    @endif
+
+                    @if(auth()->user()?->hasPermission('export_pdf'))
+                        <a href="{{ route('events.export.pdf', [
+                            'date_from' => $dateFrom,
+                            'date_to' => $dateTo,
+                            'camera' => $camera,
+                            'scenario' => $scenario,
+                            'event_type' => $eventType,
+                            'status' => $status,
+                            'search' => $search,
+                        ]) }}"
+                        class="btn btn-primary">
+                            Exportar PDF
+                        </a>
+                    @endif
+                </div>
+            @endif
+        </div>
         <div class="table-wrapper">
             <table class="data-table">
                 <thead>

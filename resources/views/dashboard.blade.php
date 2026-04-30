@@ -53,7 +53,7 @@
 
 @section('content')
 <div class="card">
-    <form method="GET" action="{{ route('dashboard') }}" class="filters-inline">
+    <form method="GET" action="{{ route('dashboard') }}" class="filters-inline" onsubmit="this.querySelector('button[type=submit]')?.classList.add('is-loading');">
         <div class="inline-field">
             <label class="field-label">Fecha desde</label>
             <input type="date" name="date_from" class="form-control" value="{{ $dateFrom }}">
@@ -96,7 +96,7 @@
 
 <div class="card">
     <div class="card-header">
-        <h2>Últimos Eventos</h2>
+        <h2>Eventos recientes</h2>
         <a href="{{ route('events.index') }}" class="link-primary">Ver todos los eventos</a>
     </div>
 
@@ -144,8 +144,9 @@
                 @empty
                     <tr>
                         <td colspan="6">
-                            <div class="empty-state">
-                                No hay eventos en el rango seleccionado.
+                            <div class="empty-state-card">
+                                <h3 class="empty-state-title">Sin eventos para mostrar</h3>
+                                <p class="empty-state-description">Ajusta el rango de fechas para revisar actividad histórica.</p>
                             </div>
                         </td>
                     </tr>

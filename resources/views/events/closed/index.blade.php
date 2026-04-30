@@ -23,13 +23,13 @@
 @section('content')
     <div class="page-header">
         <div>
-            <h1>Eventos Cerrados</h1>
+            <h1>Eventos gestionados</h1>
             <p class="topbar-subtitle">Eventos no conformes ya notificados y cerrados por un usuario.</p>
         </div>
     </div>
 
     <div class="card">
-        <form method="GET" action="{{ route('events.closed') }}" class="filters-grid">
+        <form method="GET" action="{{ route('events.closed') }}" class="filters-grid" onsubmit="this.querySelector('button[type=submit]')?.classList.add('is-loading');">
             <div>
                 <label for="camera" class="field-label">Cámara</label>
                 <select id="camera" name="camera" class="form-control">
@@ -61,12 +61,10 @@
 
             <div class="report-actions-cell">
                 <button type="submit" class="btn btn-primary">Filtrar</button>
+                <a href="{{ route('events.closed') }}" class="btn btn-secondary">Limpiar</a>
             </div>
         </form>
 
-        <div class="toolbar-left">
-            <a href="{{ route('events.closed') }}" class="btn btn-secondary">Limpiar</a>
-        </div>
     </div>
 
     <div class="card">
@@ -105,7 +103,12 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="9" class="empty-state">No hay eventos cerrados para los filtros seleccionados.</td>
+                            <td colspan="9">
+                                <div class="empty-state-card">
+                                    <h3 class="empty-state-title">Sin eventos gestionados</h3>
+                                    <p class="empty-state-description">Aún no hay cierres humanos para los filtros seleccionados.</p>
+                                </div>
+                            </td>
                         </tr>
                     @endforelse
                 </tbody>

@@ -64,6 +64,10 @@
         </span>
     </div>
 
+    <div class="page-header">
+        <h1>Resumen del evento</h1>
+    </div>
+
     <div class="summary-grid">
         <div class="summary-item">
             <span class="summary-label">Cámara</span>
@@ -92,8 +96,8 @@
 
     <div class="detail-grid">
         <div class="card">
-            <div class="card-header-column">
-                <h3>Evidencia</h3>
+            <div>
+                <h2>Evidencia destacada</h2>
             </div>
 
             @if(optional($event->evidence)->image_annotated_path)
@@ -129,8 +133,8 @@
         </div>
 
         <div class="card">
-            <div class="card-header-column">
-                <h3>Gestión de notificación de evento</h3>
+            <div>
+                <h2>Gestión de notificación de evento</h2>
             </div>
 
             @if($event->human_review_status === 'resolved')
@@ -157,17 +161,18 @@
                     </div>
                 </div>
             @elseif(auth()->user()?->hasPermission('resolve_open_events'))
-                <form method="POST" action="{{ route('events.open.resolve', $event->event_id) }}" class="info-section">
+                <form method="POST" action="{{ route('events.open.resolve', $event->event_id) }}" class="info-section" onsubmit="if (!confirm('¿Confirmas que la persona fue notificada y que el evento debe quedar cerrado?')) { return false; } this.querySelector('button[type=submit]')?.classList.add('is-loading');">
                     @csrf
 
                     <div class="info-block">
                         <label for="notified_person" class="field-label">Persona notificada</label>
-                        <input id="notified_person" name="notified_person" value="{{ old('notified_person') }}" class="form-control" maxlength="255" required>
+                        <input id="notified_person" name="notified_person" value="{{ old('notified_person') }}" class="form-control input-gradient-focus" maxlength="255" required>
+                        <p class="helper-text">Indica a quién se informó el incumplimiento.</p>
                     </div>
 
                     <div class="info-block">
                         <label for="notification_method" class="field-label">Método de notificación</label>
-                        <select id="notification_method" name="notification_method" class="form-control" required>
+                        <select id="notification_method" name="notification_method" class="form-control input-gradient-focus" required>
                             <option value="">Seleccionar</option>
                             @foreach($notificationMethods as $method)
                                 <option value="{{ $method }}" @selected(old('notification_method') === $method)>
@@ -175,14 +180,16 @@
                                 </option>
                             @endforeach
                         </select>
+                        <p class="helper-text">Selecciona el canal usado para la notificación.</p>
                     </div>
 
                     <div class="info-block">
                         <label for="resolution_note" class="field-label">Observación / motivo de cierre</label>
-                        <textarea id="resolution_note" name="resolution_note" class="form-control" rows="5" minlength="5" maxlength="2000" required>{{ old('resolution_note') }}</textarea>
+                        <textarea id="resolution_note" name="resolution_note" class="form-control input-gradient-focus" rows="5" minlength="5" maxlength="2000" required>{{ old('resolution_note') }}</textarea>
+                        <p class="helper-text danger-helper">Este cierre dejará el evento fuera de la lista de pendientes.</p>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Notificar y cerrar evento</button>
+                    <button type="submit" class="btn btn-gradient-primary">Notificar y cerrar evento</button>
                 </form>
             @else
                 <div class="empty-state">No tienes permisos para cerrar este evento.</div>
@@ -191,42 +198,28 @@
     </div>
 
     <div class="card">
-        <div class="card-header-column">
-            <h3>Historial de acciones</h3>
+        <div>
+            <h2>Historial de acciones</h2>
         </div>
 
-        <div class="table-wrapper">
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Fecha</th>
-                        <th>Acción</th>
-                        <th>Usuario</th>
-                        <th>Notificado</th>
-                        <th>Método</th>
-                        <th>Observación</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($event->actions->sortByDesc('created_at') as $action)
-                        <tr>
-                            <td>{{ optional($action->created_at)->format('d-m-Y H:i:s') }}</td>
-                            <td>{{ $actionLabel($action->action) }}</td>
-                            <td>
-                                <strong>{{ optional($action->user)->name ?? 'N/D' }}</strong><br>
-                                <small>{{ optional($action->user)->email ?? '' }}</small>
-                            </td>
-                            <td>{{ $action->notified_person ?? 'N/D' }}</td>
-                            <td>{{ $methodLabel($action->notification_method) }}</td>
-                            <td>{{ $action->note }}</td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6" class="empty-state">No hay acciones registradas para este evento.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+        <div class="info-section">
+            @forelse($event->actions->sortByDesc('created_at') as $action)
+                <div class="info-block">
+                    <strong>{{ optional($action->user)->name ?? 'N/D' }}</strong>
+                    <span> realizó acción <span class="badge-gradient-primary badge">{{ $actionLabel($action->action) }}</span> el {{ optional($action->created_at)->format('d-m-Y H:i:s') }}.</span>
+                    @if($action->notified_person || $action->notification_method)
+                        <div class="topbar-subtitle">Notificado: {{ $action->notified_person ?? 'N/D' }} · Método: {{ $methodLabel($action->notification_method) }}</div>
+                    @endif
+                    @if($action->note)
+                        <div class="topbar-subtitle">{{ $action->note }}</div>
+                    @endif
+                </div>
+            @empty
+                <div class="empty-state-card">
+                    <h3 class="empty-state-title">Sin acciones registradas</h3>
+                    <p class="empty-state-description">Cuando se comente o cierre el evento, el historial aparecerá aquí.</p>
+                </div>
+            @endforelse
         </div>
     </div>
 @endsection
