@@ -180,6 +180,16 @@
                 </a>
             @endif
 
+            @if($event->human_review_status === 'pending' && auth()->user()?->hasPermission('resolve_open_events'))
+                <a href="{{ route('events.open.show', $event->event_id) }}" class="btn btn-primary">
+                    Gestionar notificación
+                </a>
+            @elseif($event->human_review_status === 'resolved' && auth()->user()?->hasPermission('view_open_events'))
+                <a href="{{ route('events.closed.show', $event->event_id) }}" class="btn btn-secondary">
+                    Ver cierre
+                </a>
+            @endif
+
             @if(optional($event->evidence)->image_annotated_path)
                 <a href="{{ route('media.events.annotated', $event->event_id) }}" target="_blank" class="btn btn-secondary">
                     Ver Imagen Anotada

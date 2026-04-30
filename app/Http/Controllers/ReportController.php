@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\EppEvent;
+use App\Support\ActivityLogger;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -23,11 +24,14 @@ class ReportController extends Controller
 
         $summary = [
             'total_events' => (clone $query)->count(),
-            'started_violations' => (clone $query)->where('event_type', 'violation_started')->count(),
-            'resolved_violations' => (clone $query)->where('event_type', 'violation_resolved')->count(),
-            'open_violations' => EppEvent::query()
-                ->where('event_type', 'violation_started')
-                ->whereNull('resolved_by_event_id')
+            'non_compliant_events' => (clone $query)->where('status', 'non_compliant')->count(),
+            'human_pending_events' => (clone $query)
+                ->where('status', 'non_compliant')
+                ->where('human_review_status', 'pending')
+                ->count(),
+            'human_resolved_events' => (clone $query)
+                ->where('status', 'non_compliant')
+                ->where('human_review_status', 'resolved')
                 ->count(),
         ];
 
@@ -67,6 +71,17 @@ class ReportController extends Controller
         $events = $this->buildBaseQuery($request, $dateFrom, $dateTo)
             ->orderByDesc('event_confirmed_at')
             ->get();
+
+        ActivityLogger::log(
+            'download_csv',
+            'reports',
+            'Descarga CSV de reportes',
+            metadata: [
+                'records' => $events->count(),
+                'filters' => $this->safeFilters($request),
+            ],
+            request: $request,
+        );
 
         $filename = 'reporte_eventos_' . now()->format('Ymd_His') . '.csv';
 
@@ -118,13 +133,27 @@ class ReportController extends Controller
             ->limit(300)
             ->get();
 
+        ActivityLogger::log(
+            'download_pdf',
+            'reports',
+            'Descarga PDF de reportes',
+            metadata: [
+                'records' => $events->count(),
+                'filters' => $this->safeFilters($request),
+            ],
+            request: $request,
+        );
+
         $summary = [
             'total_events' => (clone $query)->count(),
-            'started_violations' => (clone $query)->where('event_type', 'violation_started')->count(),
-            'resolved_violations' => (clone $query)->where('event_type', 'violation_resolved')->count(),
-            'open_violations' => EppEvent::query()
-                ->where('event_type', 'violation_started')
-                ->whereNull('resolved_by_event_id')
+            'non_compliant_events' => (clone $query)->where('status', 'non_compliant')->count(),
+            'human_pending_events' => (clone $query)
+                ->where('status', 'non_compliant')
+                ->where('human_review_status', 'pending')
+                ->count(),
+            'human_resolved_events' => (clone $query)
+                ->where('status', 'non_compliant')
+                ->where('human_review_status', 'resolved')
                 ->count(),
         ];
 
@@ -173,5 +202,16 @@ class ReportController extends Controller
         }
 
         return $query;
+    }
+
+    private function safeFilters(Request $request): array
+    {
+        return [
+            'date_from' => $request->input('date_from'),
+            'date_to' => $request->input('date_to'),
+            'camera' => $request->input('camera', 'all'),
+            'scenario' => $request->input('scenario', 'all'),
+            'event_type' => $request->input('event_type', 'all'),
+        ];
     }
 }

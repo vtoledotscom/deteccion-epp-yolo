@@ -23,17 +23,18 @@ class DashboardController extends Controller
 
         $totalEvents = (clone $baseQuery)->count();
 
-        $startedViolations = (clone $baseQuery)
-            ->where('event_type', 'violation_started')
+        $nonCompliantEvents = (clone $baseQuery)
+            ->where('status', 'non_compliant')
             ->count();
 
-        $resolvedViolations = (clone $baseQuery)
-            ->where('event_type', 'violation_resolved')
+        $humanPendingEvents = (clone $baseQuery)
+            ->where('status', 'non_compliant')
+            ->where('human_review_status', 'pending')
             ->count();
 
-        $openViolations = EppEvent::query()
-            ->where('event_type', 'violation_started')
-            ->whereNull('resolved_by_event_id')
+        $humanResolvedEvents = (clone $baseQuery)
+            ->where('status', 'non_compliant')
+            ->where('human_review_status', 'resolved')
             ->count();
 
         $latestEvents = EppEvent::query()
@@ -47,9 +48,9 @@ class DashboardController extends Controller
             'dateFrom' => $dateFrom->format('Y-m-d'),
             'dateTo' => $dateTo->format('Y-m-d'),
             'totalEvents' => $totalEvents,
-            'startedViolations' => $startedViolations,
-            'resolvedViolations' => $resolvedViolations,
-            'openViolations' => $openViolations,
+            'nonCompliantEvents' => $nonCompliantEvents,
+            'humanPendingEvents' => $humanPendingEvents,
+            'humanResolvedEvents' => $humanResolvedEvents,
             'latestEvents' => $latestEvents,
         ]);
     }

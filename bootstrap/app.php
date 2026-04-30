@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\PermissionMiddleware;
 use App\Http\Middleware\EnsureUserIsActive;
+use App\Http\Middleware\LogUserActivity;
 use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -16,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
             'active' => EnsureUserIsActive::class,
+            'activity.log' => LogUserActivity::class,
             'permission' => PermissionMiddleware::class,
             'role' => RoleMiddleware::class,
         ]);

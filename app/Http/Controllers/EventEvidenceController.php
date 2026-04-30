@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\EppEvent;
+use App\Support\ActivityLogger;
 use Illuminate\Support\Facades\File;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -58,6 +59,18 @@ class EventEvidenceController extends Controller
         }
 
         $mimeType = File::mimeType($absolutePath) ?: ($isVideo ? 'video/mp4' : 'application/octet-stream');
+
+        ActivityLogger::log(
+            'download_evidence',
+            'evidence',
+            'Descarga de evidencia',
+            'epp_event',
+            $event->event_id,
+            [
+                'evidence_type' => $field,
+                'is_video' => $isVideo,
+            ],
+        );
 
         return response()->file($absolutePath, [
             'Content-Type' => $mimeType,

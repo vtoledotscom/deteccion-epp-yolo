@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Support\ActivityLogger;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -53,13 +54,27 @@ class UserController extends Controller
             'is_active' => ['nullable', 'boolean'],
         ]);
 
-        User::create([
+        $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'role' => $validated['role'],
             'password' => Hash::make($validated['password']),
             'is_active' => $request->boolean('is_active'),
         ]);
+
+        ActivityLogger::log(
+            'create_user',
+            'users',
+            'Creación de usuario',
+            'user',
+            $user->id,
+            [
+                'target_email' => $user->email,
+                'target_role' => $user->role,
+                'is_active' => $user->is_active,
+            ],
+            request: $request,
+        );
 
         return redirect()
             ->route('users.index')
@@ -76,6 +91,11 @@ class UserController extends Controller
 
     public function update(Request $request, User $user): RedirectResponse
     {
+        $previous = [
+            'role' => $user->role,
+            'is_active' => $user->is_active,
+        ];
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => [
@@ -108,6 +128,23 @@ class UserController extends Controller
 
         $user->update($data);
 
+        ActivityLogger::log(
+            'update_user',
+            'users',
+            'Edición de usuario',
+            'user',
+            $user->id,
+            [
+                'target_email' => $user->email,
+                'previous_role' => $previous['role'],
+                'new_role' => $user->role,
+                'previous_is_active' => $previous['is_active'],
+                'new_is_active' => $user->is_active,
+                'password_changed' => $request->filled('password'),
+            ],
+            request: $request,
+        );
+
         return redirect()
             ->route('users.index')
             ->with('status', 'Usuario actualizado correctamente.');
@@ -116,6 +153,18 @@ class UserController extends Controller
     public function activate(User $user): RedirectResponse
     {
         $user->update(['is_active' => true]);
+
+        ActivityLogger::log(
+            'activate_user',
+            'users',
+            'Activación de usuario',
+            'user',
+            $user->id,
+            [
+                'target_email' => $user->email,
+                'target_role' => $user->role,
+            ],
+        );
 
         return back()->with('status', 'Usuario activado correctamente.');
     }
@@ -130,6 +179,18 @@ class UserController extends Controller
 
         $user->update(['is_active' => false]);
 
+        ActivityLogger::log(
+            'disable_user',
+            'users',
+            'Deshabilitación de usuario',
+            'user',
+            $user->id,
+            [
+                'target_email' => $user->email,
+                'target_role' => $user->role,
+            ],
+        );
+
         return back()->with('status', 'Usuario deshabilitado correctamente.');
     }
 
@@ -141,7 +202,23 @@ class UserController extends Controller
             ]);
         }
 
+        $metadata = [
+            'target_email' => $user->email,
+            'target_role' => $user->role,
+            'was_active' => $user->is_active,
+        ];
+        $targetId = $user->id;
+
         $user->delete();
+
+        ActivityLogger::log(
+            'delete_user',
+            'users',
+            'Eliminación de usuario',
+            'user',
+            $targetId,
+            $metadata,
+        );
 
         return redirect()
             ->route('users.index')

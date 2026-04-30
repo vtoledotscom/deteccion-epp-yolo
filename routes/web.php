@@ -4,7 +4,9 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventEvidenceController;
 use App\Http\Controllers\EventExportController;
+use App\Http\Controllers\OpenEventController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ActivityLogController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,7 +21,7 @@ Route::middleware(['auth', 'active'])->group(function () {
     });
 
     Route::get('/dashboard', [DashboardController::class, 'index'])
-        ->middleware('permission:view_dashboard')
+        ->middleware(['permission:view_dashboard', 'activity.log:view_dashboard,dashboard,Vista_de_dashboard'])
         ->name('dashboard');
 
     /*
@@ -55,12 +57,32 @@ Route::middleware(['auth', 'active'])->group(function () {
     */
 
     Route::view('/events', 'events.index')
-        ->middleware('permission:view_events')
+        ->middleware(['permission:view_events', 'activity.log:view_events,events,Vista_de_listado_de_eventos'])
         ->name('events.index');
 
-    Route::view('/events/open', 'events.open')
-        ->middleware('permission:view_events')
+    Route::get('/events/open', [OpenEventController::class, 'index'])
+        ->middleware('permission:view_open_events')
         ->name('events.open');
+
+    Route::get('/events/open/{eventId}', [OpenEventController::class, 'show'])
+        ->middleware('permission:view_open_events')
+        ->name('events.open.show');
+
+    Route::post('/events/open/{eventId}/resolve', [OpenEventController::class, 'resolve'])
+        ->middleware('permission:resolve_open_events')
+        ->name('events.open.resolve');
+
+    Route::post('/events/open/{eventId}/comment', [OpenEventController::class, 'comment'])
+        ->middleware('permission:resolve_open_events')
+        ->name('events.open.comment');
+
+    Route::get('/events/closed', [OpenEventController::class, 'closed'])
+        ->middleware('permission:view_open_events')
+        ->name('events.closed');
+
+    Route::get('/events/closed/{eventId}', [OpenEventController::class, 'closedShow'])
+        ->middleware('permission:view_open_events')
+        ->name('events.closed.show');
 
     Route::get('/events/{eventId}', [EventController::class, 'show'])
         ->middleware('permission:view_event_detail')
@@ -95,8 +117,22 @@ Route::middleware(['auth', 'active'])->group(function () {
     */
 
     Route::get('/reports', [ReportController::class, 'index'])
-        ->middleware('permission:view_reports')
+        ->middleware(['permission:view_reports', 'activity.log:view_reports,reports,Vista_de_reportes'])
         ->name('reports.index');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Auditoría
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/activity-logs', [ActivityLogController::class, 'index'])
+        ->middleware('permission:view_user_activity_logs')
+        ->name('activity-logs.index');
+
+    Route::get('/activity-logs/export/csv', [ActivityLogController::class, 'exportCsv'])
+        ->middleware('permission:view_user_activity_logs')
+        ->name('activity-logs.export.csv');
 
     /*
     |--------------------------------------------------------------------------
