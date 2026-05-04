@@ -59,9 +59,9 @@
             <p>Detectado el {{ optional($event->event_confirmed_at)->format('d-m-Y H:i:s') }}</p>
         </div>
 
-        <span class="badge {{ $event->human_review_status === 'resolved' ? 'success' : 'warning' }} large">
+        {{-- <span class="badge {{ $event->human_review_status === 'resolved' ? 'success' : 'warning' }} large">
             {{ $event->human_review_status === 'resolved' ? 'Resuelto' : 'Pendiente' }}
-        </span>
+        </span> --}}
     </div>
 
     <div class="page-header">
@@ -79,10 +79,10 @@
             <strong>{{ $event->zone_name ?: $scenarioLabel($event->scenario_id) }}</strong>
         </div>
 
-        <div class="summary-item">
+        {{-- <div class="summary-item">
             <span class="summary-label">Estado detector</span>
             <strong>{{ $event->status }}</strong>
-        </div>
+        </div> --}}
 
         <div class="summary-item">
             <span class="summary-label">Incumplimiento</span>
