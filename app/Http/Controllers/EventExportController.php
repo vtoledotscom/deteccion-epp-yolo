@@ -134,6 +134,9 @@ class EventExportController extends Controller
 
         $pdf = Pdf::loadView('events.event-pdf', [
             'event' => $event,
+        ])->setOption('chroot', [
+            base_path(),
+            config('epp.project_base_path'),
         ])->setPaper('a4', 'portrait');
 
         return $pdf->download('evento_' . $event->display_id . '.pdf');
