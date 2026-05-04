@@ -166,7 +166,8 @@
 
     if (optional($event->evidence)->image_annotated_path) {
         $relativePath = ltrim(str_replace(['\\', '/'], DIRECTORY_SEPARATOR, $event->evidence->image_annotated_path), DIRECTORY_SEPARATOR);
-        $imagePath = rtrim(config('epp.project_base_path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $relativePath;
+        $absolutePath = rtrim(config('epp.project_base_path'), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $relativePath;
+        $imagePath = realpath($absolutePath);
     }
 @endphp
 
