@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\EppEvent;
 use App\Support\ActivityLogger;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -56,21 +57,12 @@ class EventReviewController extends Controller
             'date_to' => $filters['date_to'] ?? '',
         ];
 
-        $query = EppEvent::query()
-            ->with(['evidence', 'manualValidatedBy'])
-            ->when($filters['manual_status'] === 'pending', fn ($query) => $query->whereNull('manual_status'))
-            ->when(
-                ! in_array($filters['manual_status'], ['all', 'pending'], true),
-                fn ($query) => $query->where('manual_status', $filters['manual_status'])
-            )
-            ->when($filters['detected_status'] !== 'all', fn ($query) => $query->where('status', $filters['detected_status']))
-            ->when($filters['camera'] !== 'all', fn ($query) => $query->where('camera_id', $filters['camera']))
-            ->when($filters['zone'] !== 'all', fn ($query) => $query->where('zone_name', $filters['zone']))
-            ->when($filters['date_from'] !== '', fn ($query) => $query->whereDate('event_confirmed_at', '>=', $filters['date_from']))
-            ->when($filters['date_to'] !== '', fn ($query) => $query->whereDate('event_confirmed_at', '<=', $filters['date_to']))
-            ->orderByDesc('event_confirmed_at');
+        $query = $this->buildFilteredEventsQuery($filters);
+        $metrics = $this->buildMetrics(clone $query);
 
-        $events = $query
+        $events = (clone $query)
+            ->with(['evidence', 'manualValidatedBy'])
+            ->orderByDesc('event_confirmed_at')
             ->paginate(12)
             ->withQueryString();
 
@@ -87,6 +79,7 @@ class EventReviewController extends Controller
 
         return view('events.review', [
             'events' => $events,
+            'metrics' => $metrics,
             'filters' => $filters,
             'cameras' => EppEvent::query()
                 ->select('camera_id')
@@ -102,6 +95,44 @@ class EventReviewController extends Controller
                 ->orderBy('zone_name')
                 ->pluck('zone_name'),
         ]);
+    }
+
+    private function buildFilteredEventsQuery(array $filters): Builder
+    {
+        return EppEvent::query()
+            ->when($filters['manual_status'] === 'pending', fn ($query) => $query->whereNull('manual_status'))
+            ->when(
+                ! in_array($filters['manual_status'], ['all', 'pending'], true),
+                fn ($query) => $query->where('manual_status', $filters['manual_status'])
+            )
+            ->when($filters['detected_status'] !== 'all', fn ($query) => $query->where('status', $filters['detected_status']))
+            ->when($filters['camera'] !== 'all', fn ($query) => $query->where('camera_id', $filters['camera']))
+            ->when($filters['zone'] !== 'all', fn ($query) => $query->where('zone_name', $filters['zone']))
+            ->when($filters['date_from'] !== '', fn ($query) => $query->whereDate('event_confirmed_at', '>=', $filters['date_from']))
+            ->when($filters['date_to'] !== '', fn ($query) => $query->whereDate('event_confirmed_at', '<=', $filters['date_to']));
+    }
+
+    private function buildMetrics(Builder $query): array
+    {
+        $totalValidated = (clone $query)
+            ->whereNotNull('manual_status')
+            ->count();
+        $pending = (clone $query)
+            ->whereNull('manual_status')
+            ->count();
+        $correct = (clone $query)
+            ->where('manual_status', 'correct')
+            ->count();
+        $falsePositive = (clone $query)
+            ->where('manual_status', 'false_positive')
+            ->count();
+
+        return [
+            'total_validated' => $totalValidated,
+            'pending' => $pending,
+            'accuracy' => $totalValidated > 0 ? round(($correct / $totalValidated) * 100, 1) : 0,
+            'false_positive_rate' => $totalValidated > 0 ? round(($falsePositive / $totalValidated) * 100, 1) : 0,
+        ];
     }
 
     public function store(Request $request, string $eventId): RedirectResponse

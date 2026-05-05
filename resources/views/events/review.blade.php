@@ -147,8 +147,47 @@
         width: auto;
     }
 
+    .review-metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+        margin: 16px 0;
+    }
+
+    .review-metric-card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        box-shadow: var(--shadow);
+        padding: 16px;
+    }
+
+    .review-metric-value {
+        color: var(--text);
+        font-size: 28px;
+        font-weight: 800;
+        line-height: 1;
+    }
+
+    .review-metric-label {
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 700;
+        margin-top: 8px;
+    }
+
+    @media (max-width: 980px) {
+        .review-metrics-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
     @media (max-width: 640px) {
         .review-actions {
+            grid-template-columns: 1fr;
+        }
+
+        .review-metrics-grid {
             grid-template-columns: 1fr;
         }
 
@@ -245,6 +284,28 @@
             <a href="{{ route('events.review') }}" class="btn btn-secondary">Limpiar filtros</a>
         </div>
     </form>
+</div>
+
+<div class="review-metrics-grid">
+    <div class="review-metric-card">
+        <div class="review-metric-value">{{ number_format($metrics['accuracy'], 1) }}%</div>
+        <div class="review-metric-label">Precisión general</div>
+    </div>
+
+    <div class="review-metric-card">
+        <div class="review-metric-value">{{ number_format($metrics['false_positive_rate'], 1) }}%</div>
+        <div class="review-metric-label">Falsos positivos</div>
+    </div>
+
+    <div class="review-metric-card">
+        <div class="review-metric-value">{{ number_format($metrics['pending'], 0, ',', '.') }}</div>
+        <div class="review-metric-label">Pendientes de revisión</div>
+    </div>
+
+    <div class="review-metric-card">
+        <div class="review-metric-value">{{ number_format($metrics['total_validated'], 0, ',', '.') }}</div>
+        <div class="review-metric-label">Eventos validados</div>
+    </div>
 </div>
 
 <div class="review-grid">
