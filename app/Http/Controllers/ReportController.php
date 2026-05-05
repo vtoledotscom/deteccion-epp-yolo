@@ -197,8 +197,10 @@ class ReportController extends Controller
             $query->where('scenario_id', $request->input('scenario'));
         }
 
-        if ($request->filled('event_type') && $request->input('event_type') !== 'all') {
+        if (in_array($request->input('event_type'), ['violation_started', 'violation_resolved'], true)) {
             $query->where('event_type', $request->input('event_type'));
+        } else {
+            $query->where('event_type', 'violation_started');
         }
 
         return $query;

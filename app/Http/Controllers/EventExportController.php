@@ -163,19 +163,15 @@ class EventExportController extends Controller
             $query->where('scenario_id', $request->input('scenario'));
         }
 
-        if ($request->filled('event_type') && $request->input('event_type') !== 'all') {
+        if ($request->input('status') === 'open') {
+            $query->where('event_type', 'violation_started')
+                ->whereNull('resolved_by_event_id');
+        } elseif ($request->input('status') === 'resolved') {
+            $query->where('event_type', 'violation_resolved');
+        } elseif (in_array($request->input('event_type'), ['violation_started', 'violation_resolved'], true)) {
             $query->where('event_type', $request->input('event_type'));
-        }
-
-        if ($request->filled('status') && $request->input('status') !== 'all') {
-            if ($request->input('status') === 'open') {
-                $query->where('event_type', 'violation_started')
-                    ->whereNull('resolved_by_event_id');
-            }
-
-            if ($request->input('status') === 'resolved') {
-                $query->where('event_type', 'violation_resolved');
-            }
+        } else {
+            $query->where('event_type', 'violation_started');
         }
 
         if ($request->filled('search')) {

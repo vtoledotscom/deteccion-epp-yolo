@@ -20,6 +20,7 @@ class EppEvent extends Model
         'event_confirmed_at' => 'datetime',
         'resolved_at' => 'datetime',
         'human_resolved_at' => 'datetime',
+        'manual_validated_at' => 'datetime',
         'created_at' => 'datetime',
         'violation_codes_json' => 'array',
         'person_box_json' => 'array',
@@ -43,6 +44,11 @@ class EppEvent extends Model
     public function humanResolvedBy()
     {
         return $this->belongsTo(User::class, 'human_resolved_by');
+    }
+
+    public function manualValidatedBy()
+    {
+        return $this->belongsTo(User::class, 'manual_validated_by');
     }
 
     /**

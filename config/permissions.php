@@ -13,6 +13,7 @@ return [
             'view_user_activity_logs',
             'view_open_events',
             'resolve_open_events',
+            'review_detection_events',
         ],
 
         'supervisor' => [
@@ -25,6 +26,7 @@ return [
             'view_user_activity_logs',
             'view_open_events',
             'resolve_open_events',
+            'review_detection_events',
         ],
 
         'operator' => [

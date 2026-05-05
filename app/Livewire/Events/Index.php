@@ -103,19 +103,15 @@ class Index extends Component
             $query->where('scenario_id', $this->scenario);
         }
 
-        if ($this->eventType !== 'all') {
+        if ($this->status === 'open') {
+            $query->where('event_type', 'violation_started')
+                ->whereNull('resolved_by_event_id');
+        } elseif ($this->status === 'resolved') {
+            $query->where('event_type', 'violation_resolved');
+        } elseif (in_array($this->eventType, ['violation_started', 'violation_resolved'], true)) {
             $query->where('event_type', $this->eventType);
-        }
-
-        if ($this->status !== 'all') {
-            if ($this->status === 'open') {
-                $query->where('event_type', 'violation_started')
-                    ->whereNull('resolved_by_event_id');
-            }
-
-            if ($this->status === 'resolved') {
-                $query->where('event_type', 'violation_resolved');
-            }
+        } else {
+            $query->where('event_type', 'violation_started');
         }
 
         if ($this->search) {
