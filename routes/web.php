@@ -4,6 +4,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventEvidenceController;
 use App\Http\Controllers\EventExportController;
+use App\Http\Controllers\EventReviewController;
 use App\Http\Controllers\OpenEventController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ActivityLogController;
@@ -83,6 +84,14 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::get('/events/closed/{eventId}', [OpenEventController::class, 'closedShow'])
         ->middleware('permission:view_open_events')
         ->name('events.closed.show');
+
+    Route::get('/events/review', [EventReviewController::class, 'index'])
+        ->middleware('permission:review_detection_events')
+        ->name('events.review');
+
+    Route::post('/events/review/{eventId}', [EventReviewController::class, 'store'])
+        ->middleware('permission:review_detection_events')
+        ->name('events.review.store');
 
     Route::get('/events/{eventId}', [EventController::class, 'show'])
         ->middleware('permission:view_event_detail')
