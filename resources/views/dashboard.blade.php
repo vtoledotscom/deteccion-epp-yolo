@@ -65,6 +65,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Aplicar filtro</button>
+        <a href="{{ route('dashboard') }}" class="btn btn-secondary">Limpiar filtros</a>
     </form>
 </div>
 

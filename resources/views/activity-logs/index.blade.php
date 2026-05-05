@@ -147,7 +147,7 @@
         </div>
 
         <div class="mt-16">
-            {{ $logs->links('vendor.livewire.epp-pagination') }}
+            {{ $logs->links('vendor.pagination.epp') }}
         </div>
     </div>
 @endsection

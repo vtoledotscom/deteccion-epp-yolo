@@ -19,7 +19,8 @@ class DashboardController extends Controller
             : now()->endOfDay();
 
         $baseQuery = EppEvent::query()
-            ->whereBetween('event_confirmed_at', [$dateFrom, $dateTo]);
+            ->whereBetween('event_confirmed_at', [$dateFrom, $dateTo])
+            ->where('event_type', 'violation_started');
 
         $totalEvents = (clone $baseQuery)->count();
 
@@ -40,6 +41,7 @@ class DashboardController extends Controller
         $latestEvents = EppEvent::query()
             ->with('evidence')
             ->whereBetween('event_confirmed_at', [$dateFrom, $dateTo])
+            ->where('event_type', 'violation_started')
             ->orderByDesc('event_confirmed_at')
             ->limit(10)
             ->get();

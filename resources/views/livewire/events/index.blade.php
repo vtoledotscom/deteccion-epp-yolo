@@ -76,13 +76,17 @@
                 Mostrando {{ $events->count() }} de {{ $events->total() }} eventos
             </div>
 
-            @if(auth()->user()?->hasPermission('export_csv') || auth()->user()?->hasPermission('export_pdf'))
-                <div class="toolbar-right">
-                    <input type="text"
-                        wire:model.live.debounce.500ms="search"
-                        placeholder="Buscar por ID..."
-                        class="form-control search-input">
+            <div class="toolbar-right">
+                <input type="text"
+                    wire:model.live.debounce.500ms="search"
+                    placeholder="Buscar por ID..."
+                    class="form-control search-input">
 
+                <button type="button" wire:click="clearFilters" class="btn btn-secondary">
+                    Limpiar filtros
+                </button>
+
+                @if(auth()->user()?->hasPermission('export_csv') || auth()->user()?->hasPermission('export_pdf'))
                     @if(auth()->user()?->hasPermission('export_csv'))
                         <a href="{{ route('events.export.csv', [
                             'date_from' => $dateFrom,
@@ -112,8 +116,8 @@
                             Exportar PDF
                         </a>
                     @endif
-                </div>
-            @endif
+                @endif
+            </div>
         </div>
         <div class="table-wrapper">
             <table class="data-table">
