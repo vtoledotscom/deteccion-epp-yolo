@@ -87,6 +87,18 @@ class Index extends Component
         }
     }
 
+    public function clearFilters()
+    {
+        $this->dateFrom = now()->subDays(7)->format('Y-m-d');
+        $this->dateTo = now()->format('Y-m-d');
+        $this->camera = 'all';
+        $this->scenario = 'all';
+        $this->eventType = 'all';
+        $this->status = 'all';
+        $this->search = '';
+        $this->resetPage();
+    }
+
     public function render()
     {
         $dateFrom = Carbon::parse($this->dateFrom)->startOfDay();

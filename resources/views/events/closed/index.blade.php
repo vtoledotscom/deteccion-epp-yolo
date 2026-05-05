@@ -116,7 +116,7 @@
         </div>
 
         <div class="mt-16">
-            {{ $events->links('vendor.livewire.epp-pagination') }}
+            {{ $events->links('vendor.pagination.epp') }}
         </div>
     </div>
 @endsection

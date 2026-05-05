@@ -87,7 +87,7 @@
         <div>
             <label class="field-label">Tipo de evento</label>
             <select class="form-control" name="event_type">
-                <option value="all" @selected($filters['event_type'] === 'all')>Todos</option>
+                <option value="all" @selected($filters['event_type'] === 'all')>Operativos (solo incumplimientos)</option>
                 <option value="violation_started" @selected($filters['event_type'] === 'violation_started')>Iniciado</option>
                 <option value="violation_resolved" @selected($filters['event_type'] === 'violation_resolved')>Resuelto</option>
             </select>
@@ -95,6 +95,7 @@
 
         <div class="report-actions-cell-reports">
             <button class="btn btn-primary" type="submit">Aplicar filtros</button>
+            <a href="{{ route('reports.index') }}" class="btn btn-secondary">Limpiar filtros</a>
         </div>
     </form>
 </div>

@@ -129,6 +129,6 @@
             </table>
         </div>
 
-        {{ $users->links('vendor.livewire.epp-pagination') }}
+        {{ $users->links('vendor.pagination.epp') }}
     </div>
 @endsection
