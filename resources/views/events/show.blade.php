@@ -63,6 +63,25 @@
             default => $status,
         };
     }
+
+    function eventManualStatusLabel(?string $status): string {
+        return match ($status) {
+            'correct' => 'Correcto',
+            'incorrect' => 'Incorrecto',
+            'false_positive' => 'Falso positivo',
+            'not_evaluable' => 'No evaluable',
+            default => 'Pendiente',
+        };
+    }
+
+    function eventManualStatusClass(?string $status): string {
+        return match ($status) {
+            'correct' => 'success',
+            'incorrect', 'false_positive' => 'danger',
+            'not_evaluable' => 'warning',
+            default => 'warning',
+        };
+    }
 @endphp
 
 @section('content')
@@ -117,12 +136,6 @@
         @endif
 
         <div class="stack-actions">
-            @if(auth()->user()?->hasPermission('export_pdf'))
-                <a href="{{ route('events.export.event-pdf', $event->event_id) }}" class="btn btn-primary">
-                    Descargar PDF
-                </a>
-            @endif
-
             @if($event->human_review_status === 'pending' && auth()->user()?->hasPermission('resolve_open_events'))
                 <a href="{{ route('events.open.show', $event->event_id) }}" class="btn btn-primary">
                     Gestionar notificación
@@ -130,6 +143,12 @@
             @elseif($event->human_review_status === 'resolved' && auth()->user()?->hasPermission('view_open_events'))
                 <a href="{{ route('events.closed.show', $event->event_id) }}" class="btn btn-secondary">
                     Ver cierre
+                </a>
+            @endif
+
+            @if(auth()->user()?->hasPermission('export_pdf'))
+                <a href="{{ route('events.export.event-pdf', $event->event_id) }}" class="btn btn-secondary">
+                    Descargar PDF
                 </a>
             @endif
 
@@ -231,6 +250,23 @@
             <div class="info-block">
                 <span class="info-label">Fecha de resolución</span>
                 <span>{{ optional($event->resolved_at)->format('d-m-Y H:i:s') ?? 'No resuelto' }}</span>
+            </div>
+
+            <div class="info-block">
+                <span class="info-label">Validación manual</span>
+                <span class="badge {{ eventManualStatusClass($event->manual_status) }}">
+                    {{ eventManualStatusLabel($event->manual_status) }}
+                </span>
+            </div>
+
+            <div class="info-block">
+                <span class="info-label">Validado por</span>
+                <span>{{ optional($event->manualValidatedBy)->name ?? '-' }}</span>
+            </div>
+
+            <div class="info-block">
+                <span class="info-label">Fecha validación</span>
+                <span>{{ optional($event->manual_validated_at)->format('d-m-Y H:i:s') ?? '-' }}</span>
             </div>
         </div>
     </div>

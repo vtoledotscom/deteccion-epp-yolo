@@ -25,6 +25,10 @@ Route::middleware(['auth', 'active'])->group(function () {
         ->middleware(['permission:view_dashboard', 'activity.log:view_dashboard,dashboard,Vista_de_dashboard'])
         ->name('dashboard');
 
+    Route::post('/dashboard/review/{eventId}', [DashboardController::class, 'storeReview'])
+        ->middleware('permission:review_detection_events')
+        ->name('dashboard.review.store');
+
     /*
     |--------------------------------------------------------------------------
     | Exportaciones protegidas por permisos
