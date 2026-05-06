@@ -11,7 +11,7 @@ class EventController extends Controller
     public function show(string $eventId)
     {
         $event = EppEvent::query()
-            ->with('evidence')
+            ->with(['evidence', 'manualValidatedBy'])
             ->where('event_id', $eventId)
             ->firstOrFail();
 

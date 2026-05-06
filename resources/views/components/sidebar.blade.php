@@ -60,13 +60,6 @@
             </a>
         @endif
 
-        @if($user?->hasPermission('review_detection_events'))
-            <a href="{{ route('events.review') }}"
-               class="sidebar-link {{ $currentRoute === 'events.review' ? 'active' : '' }}">
-                <span>Validación manual</span>
-            </a>
-        @endif
-
         @if($user?->hasPermission('view_reports'))
             <a href="{{ route('reports.index') }}"
                class="sidebar-link {{ $currentRoute === 'reports.index' ? 'active' : '' }}">
