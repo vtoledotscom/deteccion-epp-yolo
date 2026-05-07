@@ -42,6 +42,74 @@
 @endphp
 
 @section('content')
+<style>
+    .reports-kpi-card {
+        --kpi-accent: rgba(56, 136, 235, 0.28);
+        --kpi-shadow: rgba(15, 23, 42, 0.1);
+        border-color: var(--kpi-border, var(--border));
+        transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    }
+
+    .reports-kpi-card:hover {
+        transform: translateY(-2px);
+        border-color: var(--kpi-accent);
+        box-shadow: 0 16px 30px var(--kpi-shadow);
+    }
+
+    .reports-kpi-card .kpi-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .reports-kpi-card .kpi-icon svg {
+        width: 22px;
+        height: 22px;
+        stroke: currentColor;
+        stroke-width: 2;
+    }
+
+    .reports-kpi-card.blue {
+        --kpi-border: #bfdbfe;
+        --kpi-accent: #93c5fd;
+        --kpi-shadow: rgba(37, 99, 235, 0.12);
+    }
+
+    .reports-kpi-card.blue .kpi-icon {
+        color: #2563eb;
+    }
+
+    .reports-kpi-card.red {
+        --kpi-border: #fecaca;
+        --kpi-accent: #fca5a5;
+        --kpi-shadow: rgba(220, 38, 38, 0.12);
+    }
+
+    .reports-kpi-card.red .kpi-icon {
+        color: #dc2626;
+    }
+
+    .reports-kpi-card.yellow {
+        --kpi-border: #fde68a;
+        --kpi-accent: #fcd34d;
+        --kpi-shadow: rgba(180, 83, 9, 0.12);
+    }
+
+    .reports-kpi-card.yellow .kpi-icon {
+        color: #b45309;
+    }
+
+    .reports-kpi-card.green {
+        --kpi-border: #bbf7d0;
+        --kpi-accent: #86efac;
+        --kpi-shadow: rgba(22, 163, 74, 0.12);
+    }
+
+    .reports-kpi-card.green .kpi-icon {
+        color: #16a34a;
+    }
+</style>
+
 <div class="page-header">
     <div>
         <h1>Reportes</h1>
@@ -101,26 +169,47 @@
 </div>
 
 <div class="kpi-grid">
-    <div class="kpi-card">
-        <div class="kpi-icon blue"></div>
+    <div class="kpi-card reports-kpi-card blue">
+        <div class="kpi-icon blue" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 12h4l3 8 4-16 3 8h4" />
+            </svg>
+        </div>
         <div class="kpi-value">{{ number_format($summary['total_events'], 0, ',', '.') }}</div>
         <div class="kpi-label">Total de eventos detectados</div>
     </div>
 
-    <div class="kpi-card">
-        <div class="kpi-icon red"></div>
+    <div class="kpi-card reports-kpi-card red">
+        <div class="kpi-icon red" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m12 3 9 16H3L12 3Z" />
+                <path d="M12 9v4" />
+                <path d="M12 17h.01" />
+            </svg>
+        </div>
         <div class="kpi-value">{{ number_format($summary['non_compliant_events'], 0, ',', '.') }}</div>
         <div class="kpi-label">Incumplimientos detectados</div>
     </div>
 
-    <div class="kpi-card">
-        <div class="kpi-icon orange"></div>
+    <div class="kpi-card reports-kpi-card yellow">
+        <div class="kpi-icon orange" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="8" />
+                <path d="M12 8v5l3 2" />
+                <path d="M9 2h6" />
+            </svg>
+        </div>
         <div class="kpi-value">{{ number_format($summary['human_pending_events'], 0, ',', '.') }}</div>
         <div class="kpi-label">Pendientes de gestión</div>
     </div>
 
-    <div class="kpi-card">
-        <div class="kpi-icon green"></div>
+    <div class="kpi-card reports-kpi-card green">
+        <div class="kpi-icon green" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 13c0 5-3.5 7.5-7.5 8.8a1.8 1.8 0 0 1-1 0C7.5 20.5 4 18 4 13V6l8-3 8 3v7Z" />
+                <path d="m9 12 2 2 4-4" />
+            </svg>
+        </div>
         <div class="kpi-value">{{ number_format($summary['human_resolved_events'], 0, ',', '.') }}</div>
         <div class="kpi-label">Gestionados y cerrados</div>
     </div>

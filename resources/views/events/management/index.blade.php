@@ -237,7 +237,7 @@
                                     @endif
 
                                     @if(auth()->user()?->hasPermission('export_pdf'))
-                                        <a href="{{ route('events.export.event-pdf', $event->event_id) }}" class="btn btn-primary">
+                                        <a href="{{ route('events.export.event-pdf', $event->event_id) }}" class="btn btn-secondary">
                                             Descargar PDF
                                         </a>
                                     @endif
