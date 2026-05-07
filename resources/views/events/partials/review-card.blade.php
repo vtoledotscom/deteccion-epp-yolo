@@ -45,6 +45,12 @@
             border: 0;
             border-radius: 12px;
             box-shadow: none;
+            z-index: 1;
+        }
+
+        .review-card.evidence-card:hover,
+        .review-card.evidence-card:has(.evidence-media:hover) {
+            z-index: 90;
         }
 
         .evidence-card-inner {
@@ -85,10 +91,12 @@
 
         .evidence-media {
             position: relative;
+            overflow: visible;
             aspect-ratio: 16 / 10;
             background: #f8fbff;
             border-top: 1px solid #edf2f7;
             border-bottom: 1px solid #edf2f7;
+            z-index: 2;
         }
 
         .evidence-media img {
@@ -96,6 +104,7 @@
             height: 100%;
             object-fit: cover;
             display: block;
+            cursor: pointer;
         }
 
         .evidence-placeholder {
@@ -112,8 +121,8 @@
         .evidence-preview {
             position: absolute;
             left: 50%;
-            bottom: calc(100% + 10px);
-            z-index: 80;
+            top: 50%;
+            z-index: 120;
             width: min(430px, 82vw);
             max-height: 330px;
             aspect-ratio: 16 / 10;
@@ -123,14 +132,14 @@
             box-shadow: 0 24px 54px rgba(15, 23, 42, 0.26);
             opacity: 0;
             pointer-events: none;
-            transform: translate(-50%, 8px) scale(0.98);
+            transform: translate(-50%, calc(-50% + 8px)) scale(0.98);
             transition: opacity 0.16s ease, transform 0.16s ease;
             overflow: hidden;
         }
 
         .evidence-media:hover .evidence-preview {
             opacity: 1;
-            transform: translate(-50%, 0) scale(1);
+            transform: translate(-50%, -50%) scale(1);
         }
 
         .evidence-preview img {
