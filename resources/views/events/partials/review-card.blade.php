@@ -104,6 +104,7 @@
             height: 100%;
             object-fit: cover;
             display: block;
+            cursor: pointer;
         }
 
         .evidence-placeholder {
