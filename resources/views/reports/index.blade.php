@@ -94,8 +94,8 @@
         </div>
 
         <div class="report-actions-cell-reports">
-            <button class="btn btn-primary" type="submit">Aplicar filtros</button>
-            <a href="{{ route('reports.index') }}" class="btn btn-secondary">Limpiar filtros</a>
+            <button class="btn btn-primary" type="submit">Filtrar</button>
+            <a href="{{ route('reports.index') }}" class="btn btn-secondary fix-width-button">Limpiar filtros</a>
         </div>
     </form>
 </div>

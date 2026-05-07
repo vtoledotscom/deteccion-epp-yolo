@@ -4,6 +4,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventEvidenceController;
 use App\Http\Controllers\EventExportController;
+use App\Http\Controllers\EventManagementController;
 use App\Http\Controllers\EventReviewController;
 use App\Http\Controllers\OpenEventController;
 use App\Http\Controllers\ReportController;
@@ -64,6 +65,10 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::view('/events', 'events.index')
         ->middleware(['permission:view_events', 'activity.log:view_events,events,Vista_de_listado_de_eventos'])
         ->name('events.index');
+
+    Route::get('/events/management', [EventManagementController::class, 'index'])
+        ->middleware('permission:view_open_events')
+        ->name('events.management');
 
     Route::get('/events/open', [OpenEventController::class, 'index'])
         ->middleware('permission:view_open_events')

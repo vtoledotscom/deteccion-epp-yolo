@@ -281,7 +281,7 @@
 
         <div class="review-filter-actions">
             <button type="submit" class="btn btn-primary">Filtrar</button>
-            <a href="{{ route('events.review') }}" class="btn btn-secondary">Limpiar filtros</a>
+            <a href="{{ route('events.review') }}" class="btn btn-secondary fix-width-button">Limpiar filtros</a>
         </div>
     </form>
 </div>

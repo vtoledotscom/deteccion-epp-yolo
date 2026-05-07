@@ -1,31 +1,7 @@
 @extends('layouts.app')
 
 @php
-    $roleLabels = [
-        'admin' => 'Administrador',
-        'supervisor' => 'Supervisor',
-        'operator' => 'Operador',
-        'viewer' => 'Visualizador',
-    ];
-
-    $actionLabels = [
-        'login' => 'Login exitoso',
-        'logout' => 'Logout',
-        'unauthorized_access' => 'Acceso no autorizado',
-        'view_dashboard' => 'Vista dashboard',
-        'view_events' => 'Vista eventos',
-        'view_event_detail' => 'Detalle evento',
-        'download_event_pdf' => 'PDF evento',
-        'download_csv' => 'Descarga CSV',
-        'download_pdf' => 'Descarga PDF',
-        'download_evidence' => 'Evidencia',
-        'view_reports' => 'Vista reportes',
-        'create_user' => 'Creación usuario',
-        'update_user' => 'Edición usuario',
-        'activate_user' => 'Activación usuario',
-        'disable_user' => 'Deshabilitación usuario',
-        'delete_user' => 'Eliminación usuario',
-    ];
+    use App\Support\UiLabelFormatter;
 @endphp
 
 @section('content')
@@ -49,7 +25,7 @@
                     <option value="">Todos</option>
                     @foreach ($roles as $role)
                         <option value="{{ $role }}" @selected($filters['role'] === $role)>
-                            {{ $roleLabels[$role] ?? $role }}
+                            {{ UiLabelFormatter::role($role) }}
                         </option>
                     @endforeach
                 </select>
@@ -61,7 +37,7 @@
                     <option value="">Todas</option>
                     @foreach ($actions as $action)
                         <option value="{{ $action }}" @selected($filters['action'] === $action)>
-                            {{ $actionLabels[$action] ?? $action }}
+                            {{ UiLabelFormatter::action($action) }}
                         </option>
                     @endforeach
                 </select>
@@ -73,7 +49,7 @@
                     <option value="">Todos</option>
                     @foreach ($modules as $module)
                         <option value="{{ $module }}" @selected($filters['module'] === $module)>
-                            {{ ucfirst($module) }}
+                            {{ UiLabelFormatter::module($module) }}
                         </option>
                     @endforeach
                 </select>
@@ -96,7 +72,7 @@
 
             <div class="report-actions-cell">
                 <button type="submit" class="btn btn-primary">Filtrar</button>
-                <a href="{{ route('activity-logs.index') }}" class="btn btn-secondary">Limpiar filtros</a>
+                <a href="{{ route('activity-logs.index') }}" class="btn btn-secondary fix-width-button">Limpiar filtros</a>
             </div>
         </form>
     </div>
@@ -126,10 +102,10 @@
                                 <strong>{{ $log->user_name ?? 'N/D' }}</strong><br>
                                 <small>{{ $log->user_email ?? '' }}</small>
                             </td>
-                            <td>{{ $roleLabels[$log->user_role] ?? $log->user_role }}</td>
-                            <td><span class="badge success">{{ $actionLabels[$log->action] ?? $log->action }}</span></td>
-                            <td>{{ ucfirst($log->module) }}</td>
-                            <td>{{ $log->description }}</td>
+                            <td>{{ UiLabelFormatter::role($log->user_role) }}</td>
+                            <td><span class="badge success">{{ UiLabelFormatter::action($log->action) }}</span></td>
+                            <td>{{ UiLabelFormatter::module($log->module) }}</td>
+                            <td>{{ UiLabelFormatter::description($log->description, $eventDisplayIdMap ?? []) }}</td>
                             <td>{{ $log->ip_address }}</td>
                         </tr>
                     @empty

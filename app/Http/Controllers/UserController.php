@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Support\ActivityLogger;
+use App\Support\SearchNormalizer;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -17,13 +18,18 @@ class UserController extends Controller
     public function index(Request $request): View
     {
         $search = trim((string) $request->query('search', ''));
+        $matchingRoles = SearchNormalizer::matchingUserRoles($search);
 
         $users = User::query()
-            ->when($search !== '', function ($query) use ($search) {
-                $query->where(function ($query) use ($search) {
+            ->when($search !== '', function ($query) use ($search, $matchingRoles) {
+                $query->where(function ($query) use ($search, $matchingRoles) {
                     $query->where('name', 'like', "%{$search}%")
                         ->orWhere('email', 'like', "%{$search}%")
                         ->orWhere('role', 'like', "%{$search}%");
+
+                    if ($matchingRoles !== []) {
+                        $query->orWhereIn('role', $matchingRoles);
+                    }
                 });
             })
             ->orderBy('name')

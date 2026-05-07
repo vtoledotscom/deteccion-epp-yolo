@@ -280,19 +280,20 @@
                     @endforeach
                 </select>
             </div>
+            <div class="review-filter-actions">
+                <button type="submit" class="btn btn-primary">Filtrar</button>
+                <a href="{{ route('dashboard') }}" class="btn btn-secondary fix-width-button">Limpiar filtros</a>
+            </div>
         </div>
 
-        <div class="review-filter-actions">
-            <button type="submit" class="btn btn-primary">Aplicar filtros</button>
-            <a href="{{ route('dashboard') }}" class="btn btn-secondary">Limpiar filtros</a>
-        </div>
+       
     </form>
 </div>
 
 <div class="page-header">
     <div>
         <h2>KPIs operativos</h2>
-        <p class="topbar-subtitle">Calculados solo con eventos de incumplimiento confirmado.</p>
+        <p class="topbar-subtitle">Calculados con eventos de cumplimiento e incumplimiento confirmado.</p>
     </div>
 </div>
 
@@ -324,7 +325,7 @@
 
 <div class="page-header">
     <div>
-        <h2>Validación manual</h2>
+        <h2>Validación manual de estados de cumplimientos</h2>
         <p class="topbar-subtitle">Cards mixtas de incumplimientos y cumplimientos observados.</p>
     </div>
 </div>

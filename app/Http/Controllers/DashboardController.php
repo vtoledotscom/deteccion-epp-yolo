@@ -78,7 +78,7 @@ class DashboardController extends Controller
         $reviewEvents = (clone $reviewQuery)
             ->with(['evidence', 'manualValidatedBy'])
             ->orderByDesc('event_confirmed_at')
-            ->paginate(10)
+            ->paginate(8)
             ->withQueryString();
 
         return view('dashboard', [

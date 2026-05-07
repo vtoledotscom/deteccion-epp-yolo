@@ -10,6 +10,113 @@
 @endphp
 
 @section('content')
+    <style>
+        .users-table th,
+        .users-table td {
+            padding: 11px 12px;
+            vertical-align: middle;
+        }
+
+        .user-identity {
+            min-width: 220px;
+        }
+
+        .user-name {
+            display: block;
+            color: var(--text);
+            font-weight: 800;
+            line-height: 1.25;
+            font-size: 16px;
+        }
+
+        .user-email {
+            display: block;
+            margin-top: 3px;
+            color: var(--muted);
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.3;
+            word-break: break-word;
+        }
+
+        .role-label {
+            color: var(--text);
+            font-size: 16px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .users-table .badge {
+            padding: 4px 8px;
+            font-size: 16px;
+            line-height: 1.2;
+        }
+
+        .date-stack {
+            display: inline-flex;
+            flex-direction: column;
+            gap: 2px;
+            color: var(--text);
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 1.25;
+            white-space: nowrap;
+        }
+
+        .date-stack .time {
+            color: var(--muted);
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .user-actions {
+            gap: 20px;
+            flex-wrap: nowrap;
+        }
+
+        .user-actions .link-primary {
+            min-height: 34px;
+            display: inline-flex;
+            align-items: center;
+            white-space: nowrap;
+        }
+
+        .user-actions .btn {
+            width: auto;
+            min-width: 0;
+            max-width: none;
+            height: 34px;
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .user-actions .btn-danger-outline {
+            border-color: #fecaca;
+            color: #b91c1c;
+            background: #fff;
+        }
+
+        .user-actions .btn-danger-outline:hover {
+            border-color: #ef4444;
+            color: #991b1b;
+            background: #fff7f7;
+        }
+
+        @media (max-width: 900px) {
+            .user-actions {
+                flex-wrap: wrap;
+            }
+
+            .user-actions .btn,
+            .user-actions .link-primary {
+                flex: 1 1 auto;
+                justify-content: center;
+            }
+        }
+    </style>
+
     <div class="page-header">
         <div>
             <h1>Gestión de usuarios</h1>
@@ -46,16 +153,15 @@
             <button type="submit" class="btn btn-primary">Buscar</button>
 
             @if ($search !== '')
-                <a href="{{ route('users.index') }}" class="btn btn-secondary">Limpiar</a>
+                <a href="{{ route('users.index') }}" class="btn btn-secondary fix-width-button">Limpiar filtros</a>
             @endif
         </form>
 
         <div class="table-wrapper">
-            <table class="data-table">
+            <table class="data-table users-table">
                 <thead>
                     <tr>
-                        <th>Nombre</th>
-                        <th>Email</th>
+                        <th>Usuario</th>
                         <th>Rol</th>
                         <th>Estado</th>
                         <th>Creado</th>
@@ -65,9 +171,13 @@
                 <tbody>
                     @forelse ($users as $user)
                         <tr>
-                            <td>{{ $user->name }}</td>
-                            <td>{{ $user->email }}</td>
-                            <td>{{ $roleLabels[$user->role] ?? $user->role }}</td>
+                            <td>
+                                <div class="user-identity">
+                                    <span class="user-name">{{ $user->name }}</span>
+                                    <span class="user-email">{{ $user->email }}</span>
+                                </div>
+                            </td>
+                            <td><span class="role-label">{{ $roleLabels[$user->role] ?? $user->role }}</span></td>
                             <td>
                                 @if ($user->is_active)
                                     <span class="badge success">Activo</span>
@@ -75,9 +185,14 @@
                                     <span class="badge danger">Deshabilitado</span>
                                 @endif
                             </td>
-                            <td>{{ $user->created_at?->format('d-m-Y H:i') }}</td>
                             <td>
-                                <div class="toolbar-left">
+                                <span class="date-stack">
+                                    <span>{{ $user->created_at?->format('d-m-Y') }}</span>
+                                    <span class="time">{{ $user->created_at?->format('H:i') }}</span>
+                                </span>
+                            </td>
+                            <td>
+                                <div class="toolbar-left user-actions">
                                     <a href="{{ route('users.edit', $user) }}" class="link-primary">Editar</a>
 
                                     @if ($user->is_active)
@@ -105,7 +220,7 @@
                                         @method('DELETE')
                                         <button
                                             type="submit"
-                                            class="btn btn-secondary"
+                                            class="btn btn-secondary btn-danger-outline"
                                             onclick="return confirm('¿Eliminar definitivamente este usuario? Esta acción no se puede deshacer.')"
                                             @disabled(auth()->id() === $user->id)
                                         >
@@ -117,7 +232,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6">
+                            <td colspan="5">
                                 <div class="empty-state-card">
                                     <h3 class="empty-state-title">Sin usuarios encontrados</h3>
                                     <p class="empty-state-description">Revisa el texto de búsqueda o crea una nueva cuenta.</p>

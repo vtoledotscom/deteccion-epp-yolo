@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EppEvent;
 use App\Models\UserActivityLog;
+use App\Support\SearchNormalizer;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
@@ -20,10 +23,12 @@ class ActivityLogController extends Controller
             ->orderByDesc('created_at')
             ->paginate(20)
             ->withQueryString();
+        $eventDisplayIdMap = $this->eventDisplayIdMapFor($logs);
 
         return view('activity-logs.index', [
             'logs' => $logs,
             'filters' => $filters,
+            'eventDisplayIdMap' => $eventDisplayIdMap,
             'roles' => $allowedRoles,
             'actions' => UserActivityLog::query()
                 ->whereIn('user_role', $allowedRoles)
@@ -108,11 +113,19 @@ class ActivityLogController extends Controller
             'date_from' => $this->dateFilter($request->query('date_from')),
             'date_to' => $this->dateFilter($request->query('date_to')),
             'ip' => trim((string) $request->query('ip', '')),
+            'search' => trim((string) $request->query('search', '')),
         ];
     }
 
     private function filteredQuery(array $filters, array $allowedRoles): Builder
     {
+        $matchingRoles = array_values(array_intersect(
+            SearchNormalizer::matchingUserRoles($filters['search']),
+            $allowedRoles
+        ));
+        $matchingActionTerms = SearchNormalizer::matchingActivityLogActionTerms($filters['search']);
+        $matchingModules = SearchNormalizer::matchingActivityLogModules($filters['search']);
+
         return UserActivityLog::query()
             ->whereIn('user_role', $allowedRoles)
             ->when($filters['user'] !== '', function ($query) use ($filters) {
@@ -126,7 +139,42 @@ class ActivityLogController extends Controller
             ->when($filters['module'] !== '', fn ($query) => $query->where('module', $filters['module']))
             ->when($filters['date_from'] !== '', fn ($query) => $query->whereDate('created_at', '>=', $filters['date_from']))
             ->when($filters['date_to'] !== '', fn ($query) => $query->whereDate('created_at', '<=', $filters['date_to']))
-            ->when($filters['ip'] !== '', fn ($query) => $query->where('ip_address', 'like', '%' . $filters['ip'] . '%'));
+            ->when($filters['ip'] !== '', fn ($query) => $query->where('ip_address', 'like', '%' . $filters['ip'] . '%'))
+            ->when($filters['search'] !== '', function ($query) use (
+                $filters,
+                $matchingRoles,
+                $matchingActionTerms,
+                $matchingModules
+            ) {
+                $query->where(function ($query) use (
+                    $filters,
+                    $matchingRoles,
+                    $matchingActionTerms,
+                    $matchingModules
+                ) {
+                    $query->where('user_name', 'like', '%' . $filters['search'] . '%')
+                        ->orWhere('user_email', 'like', '%' . $filters['search'] . '%')
+                        ->orWhere('user_role', 'like', '%' . $filters['search'] . '%')
+                        ->orWhere('action', 'like', '%' . $filters['search'] . '%')
+                        ->orWhere('module', 'like', '%' . $filters['search'] . '%')
+                        ->orWhere('description', 'like', '%' . $filters['search'] . '%')
+                        ->orWhere('ip_address', 'like', '%' . $filters['search'] . '%')
+                        ->orWhere('route_name', 'like', '%' . $filters['search'] . '%')
+                        ->orWhere('method', 'like', '%' . $filters['search'] . '%');
+
+                    if ($matchingRoles !== []) {
+                        $query->orWhereIn('user_role', $matchingRoles);
+                    }
+
+                    foreach ($matchingActionTerms as $actionTerm) {
+                        $query->orWhere('action', 'like', '%' . $actionTerm . '%');
+                    }
+
+                    if ($matchingModules !== []) {
+                        $query->orWhereIn('module', $matchingModules);
+                    }
+                });
+            });
     }
 
     private function dateFilter(mixed $value): string
@@ -155,5 +203,28 @@ class ActivityLogController extends Controller
             'supervisor' => ['operator', 'viewer'],
             default => [],
         };
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function eventDisplayIdMapFor(LengthAwarePaginator $logs): array
+    {
+        $targetIds = $logs->getCollection()
+            ->filter(fn (UserActivityLog $log) => $log->target_type === 'epp_event' && $log->target_id !== null)
+            ->pluck('target_id')
+            ->unique()
+            ->values();
+
+        if ($targetIds->isEmpty()) {
+            return [];
+        }
+
+        return EppEvent::query()
+            ->whereIn('event_id', $targetIds)
+            ->whereNotNull('sequence_id')
+            ->get(['event_id', 'sequence_id'])
+            ->mapWithKeys(fn (EppEvent $event) => [$event->event_id => $event->display_id])
+            ->all();
     }
 }
