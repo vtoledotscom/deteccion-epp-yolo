@@ -36,7 +36,7 @@
 
 @section('content')
     <div class="page-back">
-        <a href="{{ route('events.open') }}" class="link-primary">← Volver a Eventos abiertos</a>
+        <a href="{{ route('events.open') }}" class="link-primary">← Volver a Eventos</a>
     </div>
 
     @if(session('status'))

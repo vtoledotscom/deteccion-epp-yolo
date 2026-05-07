@@ -47,16 +47,10 @@
         @endif
 
         @if($user?->hasPermission('view_open_events'))
-            <a href="{{ route('events.open') }}"
-               class="sidebar-link {{ str_starts_with((string) $currentRoute, 'events.open') ? 'active' : '' }}">
-                <span>Eventos abiertos</span>
+            <a href="{{ route('events.management') }}"
+               class="sidebar-link {{ $currentRoute === 'events.management' ? 'active' : '' }}">
+                <span>Gestión de eventos</span>
                 <span class="sidebar-badge badge-gradient-primary">{{ number_format($openEventsCount, 0, ',', '.') }}</span>
-            </a>
-
-            <a href="{{ route('events.closed') }}"
-               class="sidebar-link {{ str_starts_with((string) $currentRoute, 'events.closed') ? 'active' : '' }}">
-                <span>Eventos cerrados</span>
-                <span class="sidebar-badge badge-gradient-primary">{{ number_format($closedEventsCount, 0, ',', '.') }}</span>
             </a>
         @endif
 

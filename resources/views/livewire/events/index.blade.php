@@ -82,7 +82,7 @@
                     placeholder="Buscar por ID..."
                     class="form-control search-input">
 
-                <button type="button" wire:click="clearFilters" class="btn btn-secondary">
+                <button type="button" wire:click="clearFilters" class="btn btn-secondary fix-width-button">
                     Limpiar filtros
                 </button>
 

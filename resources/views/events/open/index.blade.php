@@ -64,7 +64,7 @@
 
             <div class="report-actions-cell">
                 <button type="submit" class="btn btn-primary">Filtrar</button>
-                <a href="{{ route('events.open') }}" class="btn btn-secondary">Limpiar</a>
+                <a href="{{ route('events.open') }}" class="btn btn-secondary fix-width-button">Limpiar filtros</a>
             </div>
         </form>
     </div>
