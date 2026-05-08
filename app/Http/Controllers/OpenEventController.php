@@ -173,7 +173,7 @@ class OpenEventController extends Controller
 
             if ($event->status !== 'non_compliant') {
                 throw ValidationException::withMessages([
-                    'event' => 'Solo se pueden cerrar eventos no conformes.',
+                    'event' => 'Solo puedes cerrar eventos con incumplimiento.',
                 ]);
             }
 
@@ -214,7 +214,7 @@ class OpenEventController extends Controller
 
         return redirect()
             ->route('events.open.show', $event->event_id)
-            ->with('status', 'Evento notificado y cerrado correctamente.');
+            ->with('status', 'Notificación enviada y evento gestionado correctamente.');
     }
 
     public function comment(Request $request, string $eventId): RedirectResponse

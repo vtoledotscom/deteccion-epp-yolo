@@ -39,7 +39,7 @@ class EventEvidenceController extends Controller
         $relativePath = optional($event->evidence)->{$field};
 
         if (!$relativePath) {
-            abort(404, 'Evidencia no disponible');
+            abort(404, 'La evidencia no está disponible para este evento.');
         }
 
         $relativePath = ltrim(str_replace(['\\', '/'], DIRECTORY_SEPARATOR, $relativePath), DIRECTORY_SEPARATOR);

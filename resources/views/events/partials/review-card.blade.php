@@ -321,7 +321,7 @@
                         @endif
                     </div>
                 @elseif($event->manual_status === null)
-                    <div class="helper-text">Sin permiso para validar.</div>
+                    <div class="helper-text">No tienes permiso para validar este evento.</div>
                 @else
                     <div class="helper-text">Solo lectura.</div>
                 @endif

@@ -18,7 +18,7 @@ use Livewire\Attributes\Title;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
-#[Title('Security settings')]
+#[Title('Configuración de seguridad')]
 class Security extends Component
 {
     use PasswordValidationRules;
@@ -90,7 +90,7 @@ class Security extends Component
 
         $this->reset('current_password', 'password', 'password_confirmation');
 
-        Flux::toast(variant: 'success', text: __('Password updated.'));
+        Flux::toast(variant: 'success', text: __('Contraseña actualizada correctamente.'));
     }
 
     /**
@@ -120,7 +120,7 @@ class Security extends Component
             $this->qrCodeSvg = $user?->twoFactorQrCodeSvg();
             $this->manualSetupKey = decrypt($user->two_factor_secret);
         } catch (Exception) {
-            $this->addError('setupData', 'Failed to fetch setup data.');
+            $this->addError('setupData', 'No pudimos cargar los datos de configuración. Intenta nuevamente.');
 
             $this->reset('qrCodeSvg', 'manualSetupKey');
         }
@@ -204,24 +204,24 @@ class Security extends Component
     {
         if ($this->twoFactorEnabled) {
             return [
-                'title' => __('Two-factor authentication enabled'),
-                'description' => __('Two-factor authentication is now enabled. Scan the QR code or enter the setup key in your authenticator app.'),
-                'buttonText' => __('Close'),
+                'title' => __('Autenticación en dos pasos activada'),
+                'description' => __('La autenticación en dos pasos está activa. Escanea el código QR o ingresa la clave de configuración en tu aplicación de autenticación.'),
+                'buttonText' => __('Cerrar'),
             ];
         }
 
         if ($this->showVerificationStep) {
             return [
-                'title' => __('Verify authentication code'),
-                'description' => __('Enter the 6-digit code from your authenticator app.'),
-                'buttonText' => __('Continue'),
+                'title' => __('Verificar código de autenticación'),
+                'description' => __('Ingresa el código de 6 dígitos de tu aplicación de autenticación.'),
+                'buttonText' => __('Continuar'),
             ];
         }
 
         return [
-            'title' => __('Enable two-factor authentication'),
-            'description' => __('To finish enabling two-factor authentication, scan the QR code or enter the setup key in your authenticator app.'),
-            'buttonText' => __('Continue'),
+            'title' => __('Activar autenticación en dos pasos'),
+            'description' => __('Para terminar la activación, escanea el código QR o ingresa la clave de configuración en tu aplicación de autenticación.'),
+            'buttonText' => __('Continuar'),
         ];
     }
 }

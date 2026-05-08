@@ -179,7 +179,7 @@ class UserController extends Controller
     {
         if ((int) auth()->id() === (int) $user->id) {
             return back()->withErrors([
-                'user' => 'No puedes deshabilitar tu propio usuario.',
+                'user' => 'No puedes deshabilitar tu propia cuenta.',
             ]);
         }
 
@@ -204,7 +204,7 @@ class UserController extends Controller
     {
         if ((int) auth()->id() === (int) $user->id) {
             return back()->withErrors([
-                'user' => 'No puedes eliminar tu propio usuario.',
+                'user' => 'No puedes eliminar tu propia cuenta.',
             ]);
         }
 

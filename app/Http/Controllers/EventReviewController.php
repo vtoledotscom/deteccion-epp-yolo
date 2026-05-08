@@ -173,6 +173,6 @@ class EventReviewController extends Controller
 
         return redirect()
             ->route('events.review', $request->query())
-            ->with('status', 'Validacion manual registrada correctamente.');
+            ->with('status', 'Validación manual registrada correctamente.');
     }
 }
