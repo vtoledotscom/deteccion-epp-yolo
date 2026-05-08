@@ -37,34 +37,44 @@
 <div>
     <div class="card">
         <div class="filters-grid">
-            <input type="date" wire:model.live="dateFrom" class="form-control">
-            <input type="date" wire:model.live="dateTo" class="form-control">
+            <input type="date" wire:model="dateFrom" class="form-control">
+            <input type="date" wire:model="dateTo" class="form-control">
 
-            <select wire:model.live="camera" class="form-control">
+            <select wire:model="camera" class="form-control">
                 <option value="all">Todas las cámaras</option>
                 @foreach($cameras as $c)
                     <option value="{{ $c }}">{{ evCamera($c) }}</option>
                 @endforeach
             </select>
 
-            <select wire:model.live="scenario" class="form-control">
+            <select wire:model="scenario" class="form-control">
                 <option value="all">Todos los escenarios</option>
                 @foreach($scenarios as $s)
                     <option value="{{ $s }}">{{ evScenario($s) }}</option>
                 @endforeach
             </select>
 
-            <select wire:model.live="eventType" class="form-control">
+            <select wire:model="eventType" class="form-control">
                 <option value="all">Todos los tipos</option>
                 <option value="violation_started">Iniciado</option>
                 <option value="violation_resolved">Resuelto</option>
             </select>
 
-            <select wire:model.live="status" class="form-control">
+            <select wire:model="status" class="form-control">
                 <option value="all">Todos los estados</option>
                 <option value="open">Abiertos</option>
                 <option value="resolved">Resueltos</option>
             </select>
+
+            <div class="toolbar-left">
+                <button type="button" wire:click="applyFilters" class="btn btn-gradient-primary">
+                    Filtrar
+                </button>
+
+                <button type="button" wire:click="clearTopFilters" class="btn btn-secondary fix-width-button">
+                    Limpiar filtros
+                </button>
+            </div>
         </div>
     </div>
 
@@ -82,8 +92,8 @@
                     placeholder="Buscar por ID..."
                     class="form-control search-input">
 
-                <button type="button" wire:click="clearFilters" class="btn btn-secondary fix-width-button">
-                    Limpiar filtros
+                <button type="button" wire:click="clearSearch" class="btn btn-secondary fix-width-button">
+                    Limpiar filtro
                 </button>
 
                 @if(auth()->user()?->hasPermission('export_csv') || auth()->user()?->hasPermission('export_pdf'))

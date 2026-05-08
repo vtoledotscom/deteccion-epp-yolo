@@ -3,6 +3,7 @@
 namespace App\Livewire\Events;
 
 use App\Models\EppEvent;
+use App\Support\SearchNormalizer;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Carbon\Carbon;
@@ -38,8 +39,8 @@ class Index extends Component
 
     public function mount()
     {
-        $this->dateFrom = now()->subDays(7)->format('Y-m-d');
-        $this->dateTo = now()->format('Y-m-d');
+        $this->dateFrom ??= $this->defaultDateFrom();
+        $this->dateTo ??= $this->defaultDateTo();
     }
 
     public function updatingSearch()
@@ -87,16 +88,36 @@ class Index extends Component
         }
     }
 
-    public function clearFilters()
+    public function applyFilters()
     {
-        $this->dateFrom = now()->subDays(7)->format('Y-m-d');
-        $this->dateTo = now()->format('Y-m-d');
+        $this->resetPage();
+    }
+
+    public function clearTopFilters()
+    {
+        $this->dateFrom = $this->defaultDateFrom();
+        $this->dateTo = $this->defaultDateTo();
         $this->camera = 'all';
         $this->scenario = 'all';
         $this->eventType = 'all';
         $this->status = 'all';
+        $this->resetPage();
+    }
+
+    public function clearSearch()
+    {
         $this->search = '';
         $this->resetPage();
+    }
+
+    private function defaultDateFrom(): string
+    {
+        return now()->subDays(7)->format('Y-m-d');
+    }
+
+    private function defaultDateTo(): string
+    {
+        return now()->format('Y-m-d');
     }
 
     public function render()
@@ -126,8 +147,19 @@ class Index extends Component
             $query->where('event_type', 'violation_started');
         }
 
-        if ($this->search) {
-            $query->where('event_id', 'like', '%' . $this->search . '%');
+        $search = trim((string) $this->search);
+
+        if ($search !== '') {
+            $normalizedSearch = SearchNormalizer::normalize($search);
+            $sequenceId = SearchNormalizer::eventSequenceIdFromSearch($search);
+
+            $query->where(function ($query) use ($normalizedSearch, $sequenceId) {
+                $query->whereRaw('LOWER(event_id) LIKE ?', ['%' . $normalizedSearch . '%']);
+
+                if ($sequenceId !== null) {
+                    $query->orWhere('sequence_id', $sequenceId);
+                }
+            });
         }
 
         $events = $query
