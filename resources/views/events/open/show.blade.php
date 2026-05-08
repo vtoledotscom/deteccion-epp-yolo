@@ -55,10 +55,6 @@
             <h2>{{ $event->display_id }}</h2>
             <p>Detectado el {{ optional($event->event_confirmed_at)->format('d-m-Y H:i:s') }}</p>
         </div>
-
-        {{-- <span class="badge {{ $event->human_review_status === 'resolved' ? 'success' : 'warning' }} large">
-            {{ $event->human_review_status === 'resolved' ? 'Resuelto' : 'Pendiente' }}
-        </span> --}}
     </div>
 
     <div class="page-header">
