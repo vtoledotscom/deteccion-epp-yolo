@@ -43,14 +43,8 @@ h1 {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    box-shadow: 0 10px 20px rgba(56, 136, 235, 0.22);
 }
 
-.btn-gradient-primary:hover {
-    opacity: 0.96;
-    transform: translateY(-1px);
-    box-shadow: 0 14px 28px rgba(56, 136, 235, 0.28);
-}
 
 .table-header-gradient {
     background: var(--gradient-primary);

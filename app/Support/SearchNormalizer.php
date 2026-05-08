@@ -132,6 +132,17 @@ final class SearchNormalizer
         return self::matchingAliasKeys($term, self::ACTIVITY_LOG_MODULE_ALIASES);
     }
 
+    public static function eventSequenceIdFromSearch(string $term): ?int
+    {
+        $normalized = self::normalize($term);
+
+        if (! preg_match('/^(?:evt-?)?0*(\d+)$/', $normalized, $matches)) {
+            return null;
+        }
+
+        return (int) $matches[1];
+    }
+
     private static function removeAccents(string $value): string
     {
         $search = [
