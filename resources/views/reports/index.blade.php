@@ -344,7 +344,7 @@
                     <tr>
                         <td colspan="6">
                             <div class="empty-state-card">
-                                <h3 class="empty-state-title">Sin resultados de reportes</h3>
+                                <h3 class="empty-state-title">No hay resultados para los filtros seleccionados.</h3>
                                 <p class="empty-state-description">No encontramos eventos con los filtros aplicados.</p>
                             </div>
                         </td>

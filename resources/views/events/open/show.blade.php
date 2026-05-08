@@ -32,6 +32,9 @@
             default => $violation,
         }, $violations);
     };
+    $statusMessage = session('status') === 'Notificación enviada y evento gestionado correctamente.'
+        ? 'Notificación enviada y evento gestionado correctamente.'
+        : session('status');
 @endphp
 
 @section('content')
@@ -40,17 +43,11 @@
     </div>
 
     @if(session('status'))
-        <div class="card">
-            <span class="badge success">{{ session('status') }}</span>
-        </div>
+        <x-alert type="status">{{ $statusMessage }}</x-alert>
     @endif
 
     @if($errors->any())
-        <div class="card">
-            @foreach($errors->all() as $error)
-                <div class="badge danger">{{ $error }}</div>
-            @endforeach
-        </div>
+        <x-alert type="validation" :messages="$errors->all()" />
     @endif
 
     <div class="event-header">
@@ -161,7 +158,7 @@
                     </div>
                 </div>
             @elseif(auth()->user()?->hasPermission('resolve_open_events'))
-                <form method="POST" action="{{ route('events.open.resolve', $event->event_id) }}" class="info-section" onsubmit="if (!confirm('¿Confirmas que la persona fue notificada y que el evento debe quedar cerrado?')) { return false; } this.querySelector('button[type=submit]')?.classList.add('is-loading');">
+                <form method="POST" action="{{ route('events.open.resolve', $event->event_id) }}" class="info-section" onsubmit="if (!confirm('¿Confirmas que la persona fue notificada y deseas cerrar este evento?')) { return false; } this.querySelector('button[type=submit]')?.classList.add('is-loading');">
                     @csrf
 
                     <div class="info-block">

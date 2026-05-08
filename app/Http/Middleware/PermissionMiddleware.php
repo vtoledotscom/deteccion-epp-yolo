@@ -30,7 +30,7 @@ class PermissionMiddleware
                 request: $request,
             );
 
-            abort(403, 'No tienes permisos para acceder a esta sección.');
+            abort(403, 'No tienes permiso para acceder a esta sección. Contacta a un administrador si necesitas acceso.');
         }
 
         return $next($request);

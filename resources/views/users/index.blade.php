@@ -127,13 +127,11 @@
     </div>
 
     @if (session('status'))
-        <div class="alert-box">{{ session('status') }}</div>
+        <x-alert type="status">{{ session('status') }}</x-alert>
     @endif
 
     @if ($errors->any())
-        <div class="alert-box">
-            {{ $errors->first() }}
-        </div>
+        <x-alert type="error">{{ $errors->first() }}</x-alert>
     @endif
 
     <div class="card">

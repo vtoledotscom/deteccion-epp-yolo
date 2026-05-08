@@ -94,7 +94,7 @@ class FortifyServiceProvider extends ServiceProvider
                 ActivityLogger::log(
                     'login',
                     'auth',
-                    'Login exitoso',
+                    'Inicio de sesión exitoso',
                     user: $event->user,
                     request: request(),
                 );
@@ -106,7 +106,7 @@ class FortifyServiceProvider extends ServiceProvider
                 ActivityLogger::log(
                     'logout',
                     'auth',
-                    'Logout',
+                    'Cierre de sesión',
                     user: $event->user,
                     request: request(),
                 );

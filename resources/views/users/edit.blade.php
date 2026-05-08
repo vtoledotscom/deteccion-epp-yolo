@@ -28,14 +28,14 @@
                 <label for="name" class="field-label">Nombre completo</label>
                 <input id="name" name="name" value="{{ old('name', $user->name) }}" class="form-control input-gradient-focus" required>
                 <p class="helper-text">Nombre visible en menús, auditoría y acciones del sistema.</p>
-                @error('name') <span class="epp-login-error">{{ $message }}</span> @enderror
+                @error('name') <x-alert type="validation">{{ $message }}</x-alert> @enderror
             </div>
 
             <div>
                 <label for="email" class="field-label">Correo electrónico</label>
                 <input id="email" name="email" type="email" value="{{ old('email', $user->email) }}" class="form-control input-gradient-focus" required>
                 <p class="helper-text">Mantén este correo actualizado para el acceso del usuario.</p>
-                @error('email') <span class="epp-login-error">{{ $message }}</span> @enderror
+                @error('email') <x-alert type="validation">{{ $message }}</x-alert> @enderror
             </div>
 
             <div>
@@ -48,14 +48,14 @@
                     @endforeach
                 </select>
                 <p class="helper-text">Cambiar el rol ajusta los permisos efectivos.</p>
-                @error('role') <span class="epp-login-error">{{ $message }}</span> @enderror
+                @error('role') <x-alert type="validation">{{ $message }}</x-alert> @enderror
             </div>
 
             <div>
                 <label for="password" class="field-label">Nueva contraseña</label>
                 <input id="password" name="password" type="password" class="form-control input-gradient-focus">
                 <p class="helper-text">Déjalo en blanco para conservar la contraseña actual.</p>
-                @error('password') <span class="epp-login-error">{{ $message }}</span> @enderror
+                @error('password') <x-alert type="validation">{{ $message }}</x-alert> @enderror
             </div>
 
             <div>
